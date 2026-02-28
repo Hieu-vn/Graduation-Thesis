@@ -37,7 +37,7 @@ Toàn bộ quy trình nghiệp vụ và đặc tả chức năng trong tài li�
 - Sau khi đăng ký thành công (từ cả ba phương thức), hệ thống hiển thị giao diện hướng dẫn thiết lập ban đầu, yêu cầu người dùng tạo ví tài chính đầu tiên bằng cách chọn loại ví (tiền mặt hoặc tài khoản ngân hàng) và nhập số dư khởi tạo. Quy trình đăng ký hoàn tất khi tài khoản được tạo thành công, ví đầu tiên được thiết lập và người dùng có thể bắt đầu sử dụng ứng dụng để ghi chép thu chi.
 
 ```mermaid
-flowchart LR
+flowchart TD
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
@@ -90,7 +90,7 @@ flowchart LR
 - Nếu thông tin xác thực hợp lệ, hệ thống tạo phiên làm việc (session) cho người dùng, tiến hành đồng bộ dữ liệu từ cloud server về thiết bị hiện tại (bao gồm ví, giao dịch, cấu hình ngân sách, sổ tiết kiệm và các thiết lập cá nhân) và điều hướng đến giao diện Tổng quan hiển thị tình hình thu chi hiện tại. Quy trình đăng nhập hoàn tất khi người dùng truy cập thành công vào ứng dụng và dữ liệu được đồng bộ đầy đủ.
 
 ```mermaid
-flowchart LR
+flowchart TD
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
@@ -137,7 +137,7 @@ flowchart LR
 - Nếu dữ liệu hợp lệ và chưa vượt giới hạn, hệ thống lưu thông tin ví vào cơ sở dữ liệu, liên kết với tài khoản người dùng tương ứng, đồng bộ lên cloud server và cập nhật danh sách ví trong giao diện. Hệ thống hiển thị thông báo tạo ví thành công. Người dùng cũng có thể chỉnh sửa thông tin ví (tên, số dư điều chỉnh) hoặc ẩn ví không còn sử dụng. Quy trình hoàn tất khi ví được tạo hoặc cập nhật thành công và hiển thị trong danh sách quản lý ví.
 
 ```mermaid
-flowchart LR
+flowchart TD
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
@@ -196,7 +196,7 @@ flowchart LR
 - Sau khi giao dịch được lưu thành công (từ cả bốn phương thức), hệ thống thực hiện ba tác vụ liên quan: (1) cập nhật số dư ví tương ứng (cộng thêm nếu thu, trừ đi nếu chi), (2) đồng bộ dữ liệu lên cloud server, và (3) kích hoạt quy trình kiểm tra hạn mức chi tiêu (QT06) nếu đây là giao dịch chi và danh mục tương ứng đã được cấu hình hạn mức. Quy trình ghi chép giao dịch hoàn tất khi giao dịch được lưu, số dư cập nhật và các kiểm tra liên quan được thực hiện thành công.
 
 ```mermaid
-flowchart LR
+flowchart TD
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
@@ -258,7 +258,7 @@ flowchart LR
 - Sau khi nhận thông báo, người dùng xác nhận để hệ thống tạo giao dịch, cập nhật số dư ví tương ứng và ghi nhận thời điểm thực thi tiếp theo. Quy trình hoàn tất khi giao dịch định kỳ được nhắc nhở và ghi chép thành công, hoặc khi cấu hình được lưu thành công nếu chỉ đang thiết lập lần đầu.
 
 ```mermaid
-flowchart LR
+flowchart TD
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
@@ -309,7 +309,7 @@ flowchart LR
 - Quy trình hoàn tất khi cảnh báo được ghi nhận trong hệ thống và thông báo được gửi thành công đến người dùng.
 
 ```mermaid
-flowchart LR
+flowchart TD
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
@@ -369,7 +369,7 @@ flowchart LR
 - Khi đến hạn trả nợ hoặc ngày thanh toán thẻ tín dụng đã đến, bộ lập lịch (scheduler) của hệ thống phát hiện và gửi push notification nhắc nhở trực tiếp đến điện thoại người dùng. Đối với khoản cho vay (người khác nợ tôi), hệ thống nhắc nhở người dùng thu hồi nợ khi đến hạn. Quy trình hoàn tất khi khoản nợ hoặc cho vay được trả hết (dư nợ = 0) và trạng thái chuyển thành "Đã hoàn thành", hoặc khi nhắc nhở được gửi thành công đến người dùng.
 
 ```mermaid
-flowchart LR
+flowchart TD
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
@@ -433,7 +433,7 @@ flowchart LR
 - Khi gần đến ngày đáo hạn (thông thường trước 3-7 ngày), bộ lập lịch (scheduler) của hệ thống phát hiện và gửi push notification đến điện thoại người dùng với nội dung nhắc nhở sổ tiết kiệm sắp đáo hạn, kèm thông tin số tiền gốc và lãi dự kiến, giúp người dùng quyết định tái gửi, rút tiền hoặc điều chỉnh kỳ hạn. Quy trình hoàn tất khi sổ tiết kiệm được tạo thành công và các thông tin tài chính được tính toán hiển thị chính xác.
 
 ```mermaid
-flowchart LR
+flowchart TD
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
@@ -487,7 +487,7 @@ flowchart LR
 - Trường hợp không có dữ liệu giao dịch trong khoảng thời gian đã chọn, hệ thống hiển thị thông báo "Không có dữ liệu" và đề nghị người dùng chọn khoảng thời gian khác. Người dùng có thể xuất báo cáo ra file Excel hoặc PDF bằng cách chọn chức năng Xuất dữ liệu, lựa chọn định dạng mong muốn. Hệ thống tạo file chứa dữ liệu giao dịch và biểu đồ phân tích, cho phép người dùng tải về thiết bị hoặc chia sẻ qua các ứng dụng khác (email, Zalo, Messenger). Quy trình hoàn tất khi báo cáo được hiển thị đầy đủ và chính xác trên giao diện ứng dụng.
 
 ```mermaid
-flowchart LR
+flowchart TD
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
@@ -540,7 +540,7 @@ flowchart LR
 - Quy trình hoàn tất khi dữ liệu được đồng bộ thành công giữa các thiết bị, thành viên tham gia sổ chung, hoặc kết quả chia tiền được hiển thị và chia sẻ.
 
 ```mermaid
-flowchart LR
+flowchart TD
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
