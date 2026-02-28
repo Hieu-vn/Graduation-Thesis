@@ -37,10 +37,11 @@ Toàn bộ quy trình nghiệp vụ và đặc tả chức năng trong tài li�
 - Sau khi đăng ký thành công (từ cả ba phương thức), hệ thống hiển thị giao diện hướng dẫn thiết lập ban đầu, yêu cầu người dùng tạo ví tài chính đầu tiên bằng cách chọn loại ví (tiền mặt hoặc tài khoản ngân hàng) và nhập số dư khởi tạo. Quy trình đăng ký hoàn tất khi tài khoản được tạo thành công, ví đầu tiên được thiết lập và người dùng có thể bắt đầu sử dụng ứng dụng để ghi chép thu chi.
 
 ```mermaid
-flowchart TD
+flowchart LR
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
+        direction TB
         B[Mở ứng dụng]
         C{Chọn phương thức đăng ký}
         D[Xác nhận ủy quyền OAuth]
@@ -49,6 +50,7 @@ flowchart TD
     end
 
     subgraph HeThong["Hệ thống"]
+        direction TB
         F{Xác thực OAuth thành công?}
         F2[Hiển thị lỗi xác thực]
         G[Lấy thông tin từ MXH]
@@ -67,12 +69,12 @@ flowchart TD
     C -->|Facebook/Google| D
     C -->|Email| E
     D --> F
-    F -->|Không| F2 --> D
+    F -->|Không| F2
     F -->|Có| G
     E --> H
-    H -->|Không| H2 --> E
+    H -->|Không| H2
     H -->|Có| H3
-    H3 -->|Có| H4 --> E
+    H3 -->|Có| H4
     H3 -->|Không| I
     G --> I
     I --> J
@@ -88,10 +90,11 @@ flowchart TD
 - Nếu thông tin xác thực hợp lệ, hệ thống tạo phiên làm việc (session) cho người dùng, tiến hành đồng bộ dữ liệu từ cloud server về thiết bị hiện tại (bao gồm ví, giao dịch, cấu hình ngân sách, sổ tiết kiệm và các thiết lập cá nhân) và điều hướng đến giao diện Tổng quan hiển thị tình hình thu chi hiện tại. Quy trình đăng nhập hoàn tất khi người dùng truy cập thành công vào ứng dụng và dữ liệu được đồng bộ đầy đủ.
 
 ```mermaid
-flowchart TD
+flowchart LR
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
+        direction TB
         B[Mở ứng dụng]
         C{Chọn phương thức}
         D[Xác nhận OAuth]
@@ -100,6 +103,7 @@ flowchart TD
     end
 
     subgraph HeThong["Hệ thống"]
+        direction TB
         F[Gửi yêu cầu xác thực]
         G{Thông tin hợp lệ?}
         H[Hiển thị thông báo lỗi]
@@ -117,7 +121,7 @@ flowchart TD
     D --> F
     E --> F
     F --> G
-    G -->|Không| H --> C
+    G -->|Không| H
     G -->|Có| I
     I --> I2
     I2 --> I3
@@ -133,10 +137,11 @@ flowchart TD
 - Nếu dữ liệu hợp lệ và chưa vượt giới hạn, hệ thống lưu thông tin ví vào cơ sở dữ liệu, liên kết với tài khoản người dùng tương ứng, đồng bộ lên cloud server và cập nhật danh sách ví trong giao diện. Hệ thống hiển thị thông báo tạo ví thành công. Người dùng cũng có thể chỉnh sửa thông tin ví (tên, số dư điều chỉnh) hoặc ẩn ví không còn sử dụng. Quy trình hoàn tất khi ví được tạo hoặc cập nhật thành công và hiển thị trong danh sách quản lý ví.
 
 ```mermaid
-flowchart TD
+flowchart LR
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
+        direction TB
         B[Truy cập Quản lý ví]
         C[Chọn Tạo ví mới]
         D[Chọn loại ví - 5 loại]
@@ -146,6 +151,7 @@ flowchart TD
     end
 
     subgraph HeThong["Hệ thống"]
+        direction TB
         G{Dữ liệu hợp lệ?}
         G2[Hiển thị lỗi validation]
         H{Vượt giới hạn Free 2 ví?}
@@ -164,7 +170,7 @@ flowchart TD
     D --> E
     E --> F
     F --> G
-    G -->|Không| G2 --> E
+    G -->|Không| G2
     G -->|Có| H
     H -->|Có| H2
     H -->|Không| I
@@ -190,10 +196,11 @@ flowchart TD
 - Sau khi giao dịch được lưu thành công (từ cả bốn phương thức), hệ thống thực hiện ba tác vụ liên quan: (1) cập nhật số dư ví tương ứng (cộng thêm nếu thu, trừ đi nếu chi), (2) đồng bộ dữ liệu lên cloud server, và (3) kích hoạt quy trình kiểm tra hạn mức chi tiêu (QT06) nếu đây là giao dịch chi và danh mục tương ứng đã được cấu hình hạn mức. Quy trình ghi chép giao dịch hoàn tất khi giao dịch được lưu, số dư cập nhật và các kiểm tra liên quan được thực hiện thành công.
 
 ```mermaid
-flowchart TD
+flowchart LR
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
+        direction TB
         B{Chọn phương thức ghi chép}
         C1[Nhập: loại, số tiền, danh mục, ví, ngày]
         C2[Nhập text tự nhiên VD: Cơm trưa 35k]
@@ -203,6 +210,7 @@ flowchart TD
     end
 
     subgraph HeThong["Hệ thống"]
+        direction TB
         D1{Dữ liệu hợp lệ?}
         E1[Hiển thị lỗi]
         D2[AVA phân tích ngữ nghĩa 1-2s]
@@ -224,7 +232,7 @@ flowchart TD
     B -->|Giọng nói| C3
     B -->|Quét hóa đơn| C4
     C1 --> D1
-    D1 -->|Không| E1 --> C1
+    D1 -->|Không| E1
     D1 -->|Có| F
     C2 --> D2
     D2 --> D5
@@ -250,24 +258,26 @@ flowchart TD
 - Sau khi nhận thông báo, người dùng xác nhận để hệ thống tạo giao dịch, cập nhật số dư ví tương ứng và ghi nhận thời điểm thực thi tiếp theo. Quy trình hoàn tất khi giao dịch định kỳ được nhắc nhở và ghi chép thành công, hoặc khi cấu hình được lưu thành công nếu chỉ đang thiết lập lần đầu.
 
 ```mermaid
-flowchart TD
+flowchart LR
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
+        direction TB
         B[Truy cập Dự thu, Dự chi]
         C[Nhập: loại, số tiền, danh mục, ví, chu kỳ, ngày BĐ]
         D[Bật hoặc tắt kích hoạt]
         E[Xác nhận lưu]
-        K[Nhận nhắc nhở và xác nhận giao dịch]
     end
 
     subgraph HeThong["Hệ thống"]
+        direction TB
         F{Dữ liệu hợp lệ?}
         F2[Hiển thị lỗi]
         G[Lưu cấu hình định kỳ vào CSDL]
         H[Scheduler kiểm tra định kỳ hàng ngày]
         I{Kích hoạt và đến hạn?}
         J[Gửi push notification nhắc nhở]
+        K[Người dùng xác nhận giao dịch]
         K2[Tạo giao dịch, cập nhật số dư ví]
         K3[Ghi nhận thời điểm thực thi tiếp theo]
     end
@@ -279,7 +289,7 @@ flowchart TD
     C --> D
     D --> E
     E --> F
-    F -->|Không| F2 --> C
+    F -->|Không| F2
     F -->|Có| G
     G --> H
     H --> I
@@ -299,10 +309,11 @@ flowchart TD
 - Quy trình hoàn tất khi cảnh báo được ghi nhận trong hệ thống và thông báo được gửi thành công đến người dùng.
 
 ```mermaid
-flowchart TD
+flowchart LR
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
+        direction TB
         B[Truy cập Hạn mức chi]
         C[Chọn Thêm hạn mức mới]
         D[Chọn danh mục, nhập hạn mức, chu kỳ tháng]
@@ -311,6 +322,7 @@ flowchart TD
     end
 
     subgraph HeThong["Hệ thống"]
+        direction TB
         F{Hạn mức hợp lệ?}
         F2[Hiển thị lỗi]
         G{Vượt giới hạn Free?}
@@ -331,7 +343,7 @@ flowchart TD
     C --> D
     D --> E
     E --> F
-    F -->|Không| F2 --> D
+    F -->|Không| F2
     F -->|Có| G
     G -->|Có| G2
     G -->|Không| H
@@ -357,19 +369,20 @@ flowchart TD
 - Khi đến hạn trả nợ hoặc ngày thanh toán thẻ tín dụng đã đến, bộ lập lịch (scheduler) của hệ thống phát hiện và gửi push notification nhắc nhở trực tiếp đến điện thoại người dùng. Đối với khoản cho vay (người khác nợ tôi), hệ thống nhắc nhở người dùng thu hồi nợ khi đến hạn. Quy trình hoàn tất khi khoản nợ hoặc cho vay được trả hết (dư nợ = 0) và trạng thái chuyển thành "Đã hoàn thành", hoặc khi nhắc nhở được gửi thành công đến người dùng.
 
 ```mermaid
-flowchart TD
+flowchart LR
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
+        direction TB
         B[Truy cập Quản lý nợ]
         C{Chọn loại khoản}
         D1[Nhập: người cho vay, số tiền, lãi suất, hạn trả]
         D2[Nhập: người vay, số tiền, hạn trả]
         E[Xác nhận lưu]
-        K[Ghi nhận trả nợ hoặc thu nợ]
     end
 
     subgraph HeThong["Hệ thống"]
+        direction TB
         F{Dữ liệu hợp lệ?}
         F2[Hiển thị lỗi]
         G[Lưu khoản nợ vào CSDL]
@@ -379,6 +392,7 @@ flowchart TD
         H[Scheduler kiểm tra hạn trả]
         I{Đến hạn?}
         J[Gửi push notification nhắc nhở]
+        K[Người dùng ghi nhận trả nợ hoặc thu nợ]
         K2[Cập nhật dư nợ còn lại]
         K3{Trả hết, dư nợ bằng 0?}
         K4[Cập nhật trạng thái: Hoàn thành]
@@ -393,7 +407,7 @@ flowchart TD
     D1 --> E
     D2 --> E
     E --> F
-    F -->|Không| F2 --> D1
+    F -->|Không| F2
     F -->|Có| G
     G --> G2
     G2 -->|Có| G3
@@ -419,10 +433,11 @@ flowchart TD
 - Khi gần đến ngày đáo hạn (thông thường trước 3-7 ngày), bộ lập lịch (scheduler) của hệ thống phát hiện và gửi push notification đến điện thoại người dùng với nội dung nhắc nhở sổ tiết kiệm sắp đáo hạn, kèm thông tin số tiền gốc và lãi dự kiến, giúp người dùng quyết định tái gửi, rút tiền hoặc điều chỉnh kỳ hạn. Quy trình hoàn tất khi sổ tiết kiệm được tạo thành công và các thông tin tài chính được tính toán hiển thị chính xác.
 
 ```mermaid
-flowchart TD
+flowchart LR
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
+        direction TB
         B[Truy cập Sổ tiết kiệm]
         C[Chọn Tạo sổ mới]
         D[Nhập: tên - số tiền - lãi suất - kỳ hạn - ngân hàng]
@@ -431,6 +446,7 @@ flowchart TD
     end
 
     subgraph HeThong["Hệ thống"]
+        direction TB
         F{Dữ liệu hợp lệ?}
         F2[Hiển thị lỗi]
         G{Vượt giới hạn Free?}
@@ -450,7 +466,7 @@ flowchart TD
     C --> D
     D --> E
     E --> F
-    F -->|Không| F2 --> D
+    F -->|Không| F2
     F -->|Có| G
     G -->|Có| G2
     G -->|Không| H
@@ -471,18 +487,17 @@ flowchart TD
 - Trường hợp không có dữ liệu giao dịch trong khoảng thời gian đã chọn, hệ thống hiển thị thông báo "Không có dữ liệu" và đề nghị người dùng chọn khoảng thời gian khác. Người dùng có thể xuất báo cáo ra file Excel hoặc PDF bằng cách chọn chức năng Xuất dữ liệu, lựa chọn định dạng mong muốn. Hệ thống tạo file chứa dữ liệu giao dịch và biểu đồ phân tích, cho phép người dùng tải về thiết bị hoặc chia sẻ qua các ứng dụng khác (email, Zalo, Messenger). Quy trình hoàn tất khi báo cáo được hiển thị đầy đủ và chính xác trên giao diện ứng dụng.
 
 ```mermaid
-flowchart TD
+flowchart LR
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
+        direction TB
         B[Truy cập chức năng Báo cáo]
         C[Chọn bộ lọc thời gian]
-        H[Xem biểu đồ + 6 chiếc hũ]
-        J[Chọn định dạng Excel hoặc PDF]
-        K[Tải file hoặc Chia sẻ]
     end
 
     subgraph HeThong["Hệ thống"]
+        direction TB
         D[Truy vấn giao dịch theo bộ lọc]
         D2{Có dữ liệu?}
         D3[Hiển thị: Không có dữ liệu]
@@ -490,8 +505,11 @@ flowchart TD
         F[Tạo biểu đồ tròn - cơ cấu phần trăm]
         F2[Tạo biểu đồ cột và xu hướng]
         G[Phân tích 6 chiếc hũ tài chính]
+        H[Hiển thị biểu đồ + 6 chiếc hũ]
         I{Xuất báo cáo?}
+        J[Người dùng chọn định dạng Excel hoặc PDF]
         J2[Tạo file Excel hoặc PDF]
+        K[Tải file hoặc Chia sẻ]
     end
 
     L([Kết thúc])
@@ -522,10 +540,11 @@ flowchart TD
 - Quy trình hoàn tất khi dữ liệu được đồng bộ thành công giữa các thiết bị, thành viên tham gia sổ chung, hoặc kết quả chia tiền được hiển thị và chia sẻ.
 
 ```mermaid
-flowchart TD
+flowchart LR
     A([Bắt đầu])
 
     subgraph NguoiDung["Người dùng"]
+        direction TB
         B{Chức năng cần thực hiện}
         C[Nhập email thành viên mời]
         D[Tạo sự kiện: tên - ngày - thành viên]
@@ -536,6 +555,7 @@ flowchart TD
     end
 
     subgraph HeThong["Hệ thống"]
+        direction TB
         F{Tài khoản mời tồn tại?}
         F2[Hiển thị lỗi]
         G[Gửi lời mời tham gia]
