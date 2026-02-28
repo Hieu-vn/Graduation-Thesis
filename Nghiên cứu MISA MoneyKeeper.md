@@ -38,22 +38,46 @@ Toàn bộ quy trình nghiệp vụ và đặc tả chức năng trong tài li�
 
 ```mermaid
 flowchart TD
-    A([Bắt đầu]) --> B[Mở ứng dụng]
-    B --> C{Chọn phương thức đăng ký}
-    C -->|Facebook/Google| D[Xác nhận ủy quyền OAuth]
-    C -->|Email| E[Nhập email, mật khẩu, họ tên]
-    D --> F{Xác thực OAuth thành công?}
-    F -->|Không| F2[Hiển thị lỗi xác thực] --> D
-    F -->|Có| G[Lấy thông tin từ MXH]
-    E --> H{Dữ liệu hợp lệ?}
-    H -->|Không| H2[Hiển thị lỗi validation] --> E
-    H -->|Có| H3{Email đã tồn tại?}
-    H3 -->|Có| H4[Thông báo email đã sử dụng] --> E
-    H3 -->|Không| I[Tạo tài khoản, lưu CSDL]
+    A([Bắt đầu])
+
+    subgraph NguoiDung["Người dùng"]
+        B[Mở ứng dụng]
+        C{Chọn phương thức đăng ký}
+        D[Xác nhận ủy quyền OAuth]
+        E[Nhập email, mật khẩu, họ tên]
+        K[Tạo ví đầu tiên và nhập số dư]
+    end
+
+    subgraph HeThong["Hệ thống"]
+        F{Xác thực OAuth thành công?}
+        F2[Hiển thị lỗi xác thực]
+        G[Lấy thông tin từ MXH]
+        H{Dữ liệu hợp lệ?}
+        H2[Hiển thị lỗi validation]
+        H3{Email đã tồn tại?}
+        H4[Thông báo email đã sử dụng]
+        I[Tạo tài khoản, lưu CSDL]
+        J[Hiển thị thiết lập ban đầu]
+    end
+
+    L([Kết thúc])
+
+    A --> B
+    B --> C
+    C -->|Facebook/Google| D
+    C -->|Email| E
+    D --> F
+    F -->|Không| F2 --> D
+    F -->|Có| G
+    E --> H
+    H -->|Không| H2 --> E
+    H -->|Có| H3
+    H3 -->|Có| H4 --> E
+    H3 -->|Không| I
     G --> I
-    I --> J[Hiển thị thiết lập ban đầu]
-    J --> K[Tạo ví đầu tiên và nhập số dư]
-    K --> L([Kết thúc])
+    I --> J
+    J --> K
+    K --> L
 ```
 
 ### QT02. Quy trình đăng nhập
@@ -65,19 +89,40 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bắt đầu]) --> B[Mở ứng dụng]
-    B --> C{Chọn phương thức}
-    C -->|Facebook/Google| D[Xác nhận OAuth]
-    C -->|Email| E[Nhập email và mật khẩu]
-    D --> F[Gửi yêu cầu]
+    A([Bắt đầu])
+
+    subgraph NguoiDung["Người dùng"]
+        B[Mở ứng dụng]
+        C{Chọn phương thức}
+        D[Xác nhận OAuth]
+        E[Nhập email và mật khẩu]
+        J[Truy cập giao diện Tổng quan]
+    end
+
+    subgraph HeThong["Hệ thống"]
+        F[Gửi yêu cầu xác thực]
+        G{Thông tin hợp lệ?}
+        H[Hiển thị thông báo lỗi]
+        I[Tạo phiên làm việc]
+        I2[Đồng bộ dữ liệu từ cloud]
+        I3[Điều hướng Tổng quan]
+    end
+
+    K([Kết thúc])
+
+    A --> B
+    B --> C
+    C -->|Facebook/Google| D
+    C -->|Email| E
+    D --> F
     E --> F
-    F --> G{Thông tin hợp lệ?}
-    G -->|Không| H[Hiển thị thông báo lỗi] --> C
-    G -->|Có| I[Tạo phiên làm việc]
-    I --> I2[Đồng bộ dữ liệu từ cloud]
-    I2 --> I3[Điều hướng Tổng quan]
-    I3 --> J[Truy cập giao diện Tổng quan]
-    J --> K([Kết thúc])
+    F --> G
+    G -->|Không| H --> C
+    G -->|Có| I
+    I --> I2
+    I2 --> I3
+    I3 --> J
+    J --> K
 ```
 
 ### QT03. Quy trình tạo và quản lý ví
@@ -89,21 +134,45 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bắt đầu]) --> B[Truy cập Quản lý ví]
-    B --> C[Chọn Tạo ví mới]
-    C --> D[Chọn loại ví - 5 loại]
-    D --> E[Nhập tên, số dư, tiền tệ]
-    E --> F[Xác nhận tạo ví]
-    F --> G{Dữ liệu hợp lệ?}
-    G -->|Không| G2[Hiển thị lỗi validation] --> E
-    G -->|Có| H{Vượt giới hạn Free 2 ví?}
-    H -->|Có| H2[Yêu cầu nâng cấp Premium]
-    H -->|Không| I[Lưu ví vào CSDL]
-    I --> J[Đồng bộ cloud]
-    J --> K[Cập nhật danh sách ví]
-    K --> K2[Thông báo tạo thành công]
-    K2 --> L[Xem ví trong danh sách]
-    L --> M([Kết thúc])
+    A([Bắt đầu])
+
+    subgraph NguoiDung["Người dùng"]
+        B[Truy cập Quản lý ví]
+        C[Chọn Tạo ví mới]
+        D[Chọn loại ví - 5 loại]
+        E[Nhập tên, số dư, tiền tệ]
+        F[Xác nhận tạo ví]
+        L[Xem ví trong danh sách]
+    end
+
+    subgraph HeThong["Hệ thống"]
+        G{Dữ liệu hợp lệ?}
+        G2[Hiển thị lỗi validation]
+        H{Vượt giới hạn Free 2 ví?}
+        H2[Yêu cầu nâng cấp Premium]
+        I[Lưu ví vào CSDL]
+        J[Đồng bộ cloud]
+        K[Cập nhật danh sách ví]
+        K2[Thông báo tạo thành công]
+    end
+
+    M([Kết thúc])
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G -->|Không| G2 --> E
+    G -->|Có| H
+    H -->|Có| H2
+    H -->|Không| I
+    I --> J
+    J --> K
+    K --> K2
+    K2 --> L
+    L --> M
 ```
 
 ### QT04. Quy trình ghi chép giao dịch
@@ -122,27 +191,54 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bắt đầu]) --> B{Chọn phương thức ghi chép}
-    B -->|Thủ công| C1[Nhập: loại, số tiền, danh mục, ví, ngày]
-    B -->|AI Chat AVA| C2[Nhập text tự nhiên VD: Cơm trưa 35k]
-    B -->|Giọng nói| C3[Nói trực tiếp mô tả giao dịch]
-    B -->|Quét hóa đơn| C4[Chụp ảnh hoặc chọn ảnh hóa đơn]
-    C1 --> D1{Dữ liệu hợp lệ?}
-    D1 -->|Không| E1[Hiển thị lỗi] --> C1
-    D1 -->|Có| F[Lưu giao dịch vào CSDL]
-    C2 --> D2[AVA phân tích ngữ nghĩa 1-2s]
-    D2 --> D5[Hiển thị preview giao dịch]
-    C3 --> D3[Speech-to-text chuyển văn bản]
+    A([Bắt đầu])
+
+    subgraph NguoiDung["Người dùng"]
+        B{Chọn phương thức ghi chép}
+        C1[Nhập: loại, số tiền, danh mục, ví, ngày]
+        C2[Nhập text tự nhiên VD: Cơm trưa 35k]
+        C3[Nói trực tiếp mô tả giao dịch]
+        C4[Chụp ảnh hoặc chọn ảnh hóa đơn]
+        J[Kiểm tra preview và xác nhận lưu]
+    end
+
+    subgraph HeThong["Hệ thống"]
+        D1{Dữ liệu hợp lệ?}
+        E1[Hiển thị lỗi]
+        D2[AVA phân tích ngữ nghĩa 1-2s]
+        D3[Speech-to-text chuyển văn bản]
+        D4[OCR trích xuất thông tin hóa đơn]
+        D5[Hiển thị preview giao dịch]
+        F[Lưu giao dịch vào CSDL]
+        G[Cập nhật số dư ví]
+        G2[Đồng bộ cloud]
+        H{Giao dịch chi có hạn mức?}
+        I[Kiểm tra hạn mức QT06]
+    end
+
+    K([Kết thúc])
+
+    A --> B
+    B -->|Thủ công| C1
+    B -->|AI Chat AVA| C2
+    B -->|Giọng nói| C3
+    B -->|Quét hóa đơn| C4
+    C1 --> D1
+    D1 -->|Không| E1 --> C1
+    D1 -->|Có| F
+    C2 --> D2
+    D2 --> D5
+    C3 --> D3
     D3 --> D2
-    C4 --> D4[OCR trích xuất thông tin hóa đơn]
+    C4 --> D4
     D4 --> D5
-    D5 --> J[Kiểm tra preview và xác nhận lưu]
+    D5 --> J
     J --> F
-    F --> G[Cập nhật số dư ví]
-    G --> G2[Đồng bộ cloud]
-    G2 --> H{Giao dịch chi có hạn mức?}
-    H -->|Có| I[Kiểm tra hạn mức QT06]
-    H -->|Không| K([Kết thúc])
+    F --> G
+    G --> G2
+    G2 --> H
+    H -->|Có| I
+    H -->|Không| K
     I --> K
 ```
 
@@ -155,21 +251,44 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bắt đầu]) --> B[Truy cập Dự thu, Dự chi]
-    B --> C[Nhập: loại, số tiền, danh mục, ví, chu kỳ, ngày BĐ]
-    C --> D[Bật hoặc tắt kích hoạt]
-    D --> E[Xác nhận lưu]
-    E --> F{Dữ liệu hợp lệ?}
-    F -->|Không| F2[Hiển thị lỗi] --> C
-    F -->|Có| G[Lưu cấu hình định kỳ vào CSDL]
-    G --> H[Scheduler kiểm tra định kỳ hàng ngày]
-    H --> I{Kích hoạt và đến hạn?}
+    A([Bắt đầu])
+
+    subgraph NguoiDung["Người dùng"]
+        B[Truy cập Dự thu, Dự chi]
+        C[Nhập: loại, số tiền, danh mục, ví, chu kỳ, ngày BĐ]
+        D[Bật hoặc tắt kích hoạt]
+        E[Xác nhận lưu]
+        K[Nhận nhắc nhở và xác nhận giao dịch]
+    end
+
+    subgraph HeThong["Hệ thống"]
+        F{Dữ liệu hợp lệ?}
+        F2[Hiển thị lỗi]
+        G[Lưu cấu hình định kỳ vào CSDL]
+        H[Scheduler kiểm tra định kỳ hàng ngày]
+        I{Kích hoạt và đến hạn?}
+        J[Gửi push notification nhắc nhở]
+        K2[Tạo giao dịch, cập nhật số dư ví]
+        K3[Ghi nhận thời điểm thực thi tiếp theo]
+    end
+
+    L([Kết thúc])
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F -->|Không| F2 --> C
+    F -->|Có| G
+    G --> H
+    H --> I
     I -->|Chưa| H
-    I -->|Có| J[Gửi push notification nhắc nhở]
-    J --> K[Nhận nhắc nhở và xác nhận giao dịch]
-    K --> K2[Tạo giao dịch, cập nhật số dư ví]
-    K2 --> K3[Ghi nhận thời điểm thực thi tiếp theo]
-    K3 --> L([Kết thúc])
+    I -->|Có| J
+    J --> K
+    K --> K2
+    K2 --> K3
+    K3 --> L
 ```
 
 ### QT06. Quy trình thiết lập và cảnh báo hạn mức chi tiêu
@@ -181,25 +300,51 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bắt đầu]) --> B[Truy cập Hạn mức chi]
-    B --> C[Chọn Thêm hạn mức mới]
-    C --> D[Chọn danh mục, nhập hạn mức, chu kỳ tháng]
-    D --> E[Xác nhận lưu]
-    E --> F{Hạn mức hợp lệ?}
-    F -->|Không| F2[Hiển thị lỗi] --> D
-    F -->|Có| G{Vượt giới hạn Free?}
-    G -->|Có| G2[Yêu cầu nâng cấp Premium]
-    G -->|Không| H[Lưu cấu hình, kích hoạt giám sát]
-    H --> I[Khi có giao dịch chi phát sinh]
-    I --> I2[Tính tổng chi trong kỳ theo danh mục]
-    I2 --> J{So sánh với hạn mức}
-    J -->|Dưới 80| J1[Progress bar xanh, bình thường]
-    J -->|80 đến 99| J2[Progress bar vàng, cảnh báo]
-    J -->|Từ 100 trở lên| J3[Push notification: Vượt ngân sách]
-    J1 --> K[Xem thanh tiến độ hoặc Nhận push notification]
+    A([Bắt đầu])
+
+    subgraph NguoiDung["Người dùng"]
+        B[Truy cập Hạn mức chi]
+        C[Chọn Thêm hạn mức mới]
+        D[Chọn danh mục, nhập hạn mức, chu kỳ tháng]
+        E[Xác nhận lưu]
+        K[Xem thanh tiến độ hoặc Nhận push notification]
+    end
+
+    subgraph HeThong["Hệ thống"]
+        F{Hạn mức hợp lệ?}
+        F2[Hiển thị lỗi]
+        G{Vượt giới hạn Free?}
+        G2[Yêu cầu nâng cấp Premium]
+        H[Lưu cấu hình, kích hoạt giám sát]
+        I[Khi có giao dịch chi phát sinh]
+        I2[Tính tổng chi trong kỳ theo danh mục]
+        J{So sánh với hạn mức}
+        J1[Progress bar xanh, bình thường]
+        J2[Progress bar vàng, cảnh báo]
+        J3[Push notification: Vượt ngân sách]
+    end
+
+    L([Kết thúc])
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F -->|Không| F2 --> D
+    F -->|Có| G
+    G -->|Có| G2
+    G -->|Không| H
+    H --> I
+    I --> I2
+    I2 --> J
+    J -->|Dưới 80| J1
+    J -->|80 đến 99| J2
+    J -->|Từ 100 trở lên| J3
+    J1 --> K
     J2 --> K
     J3 --> K
-    K --> L([Kết thúc])
+    K --> L
 ```
 
 ---
@@ -213,29 +358,57 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bắt đầu]) --> B[Truy cập Quản lý nợ]
-    B --> C{Chọn loại khoản}
-    C -->|Tôi nợ| D1[Nhập: người cho vay, số tiền, lãi suất, hạn trả]
-    C -->|Nợ tôi| D2[Nhập: người vay, số tiền, hạn trả]
-    D1 --> E[Xác nhận lưu]
+    A([Bắt đầu])
+
+    subgraph NguoiDung["Người dùng"]
+        B[Truy cập Quản lý nợ]
+        C{Chọn loại khoản}
+        D1[Nhập: người cho vay, số tiền, lãi suất, hạn trả]
+        D2[Nhập: người vay, số tiền, hạn trả]
+        E[Xác nhận lưu]
+        K[Ghi nhận trả nợ hoặc thu nợ]
+    end
+
+    subgraph HeThong["Hệ thống"]
+        F{Dữ liệu hợp lệ?}
+        F2[Hiển thị lỗi]
+        G[Lưu khoản nợ vào CSDL]
+        G2{Có lãi suất?}
+        G3[Tính lãi, tạo bảng lịch trả nợ]
+        G4[Thiết lập nhắc nhở]
+        H[Scheduler kiểm tra hạn trả]
+        I{Đến hạn?}
+        J[Gửi push notification nhắc nhở]
+        K2[Cập nhật dư nợ còn lại]
+        K3{Trả hết, dư nợ bằng 0?}
+        K4[Cập nhật trạng thái: Hoàn thành]
+    end
+
+    L([Kết thúc])
+
+    A --> B
+    B --> C
+    C -->|Tôi nợ| D1
+    C -->|Nợ tôi| D2
+    D1 --> E
     D2 --> E
-    E --> F{Dữ liệu hợp lệ?}
-    F -->|Không| F2[Hiển thị lỗi] --> D1
-    F -->|Có| G[Lưu khoản nợ vào CSDL]
-    G --> G2{Có lãi suất?}
-    G2 -->|Có| G3[Tính lãi, tạo bảng lịch trả nợ]
-    G2 -->|Không| G4[Thiết lập nhắc nhở]
+    E --> F
+    F -->|Không| F2 --> D1
+    F -->|Có| G
+    G --> G2
+    G2 -->|Có| G3
+    G2 -->|Không| G4
     G3 --> G4
-    G4 --> H[Scheduler kiểm tra hạn trả]
-    H --> I{Đến hạn?}
+    G4 --> H
+    H --> I
     I -->|Chưa| H
-    I -->|Có| J[Gửi push notification nhắc nhở]
-    J --> K[Ghi nhận trả nợ hoặc thu nợ]
-    K --> K2[Cập nhật dư nợ còn lại]
-    K2 --> K3{Trả hết, dư nợ bằng 0?}
-    K3 -->|Có| K4[Cập nhật trạng thái: Hoàn thành]
+    I -->|Có| J
+    J --> K
+    K --> K2
+    K2 --> K3
+    K3 -->|Có| K4
     K3 -->|Chưa| H
-    K4 --> L([Kết thúc])
+    K4 --> L
 ```
 
 ### QT08. Quy trình quản lý sổ tiết kiệm
@@ -247,23 +420,48 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bắt đầu]) --> B[Truy cập Sổ tiết kiệm]
-    B --> C[Chọn Tạo sổ mới]
-    C --> D[Nhập: tên - số tiền - lãi suất - kỳ hạn - ngân hàng]
-    D --> E[Xác nhận lưu]
-    E --> F{Dữ liệu hợp lệ?}
-    F -->|Không| F2[Hiển thị lỗi] --> D
-    F -->|Có| G{Vượt giới hạn Free?}
-    G -->|Có| G2[Yêu cầu nâng cấp Premium]
-    G -->|Không| H[Lưu sổ tiết kiệm vào CSDL]
-    H --> I[Tính lãi = gốc x lãi suất x kỳ hạn chia 12]
-    I --> I2[Tính tổng = gốc + lãi và ngày đáo hạn]
-    I2 --> I3[Hiển thị chi tiết sổ tiết kiệm]
-    I3 --> J{Gần đáo hạn 3-7 ngày?}
-    J -->|Có| J2[Push notification: Sổ sắp đáo hạn]
-    J -->|Chưa| K[Xem thông tin sổ + lãi dự kiến]
+    A([Bắt đầu])
+
+    subgraph NguoiDung["Người dùng"]
+        B[Truy cập Sổ tiết kiệm]
+        C[Chọn Tạo sổ mới]
+        D[Nhập: tên - số tiền - lãi suất - kỳ hạn - ngân hàng]
+        E[Xác nhận lưu]
+        K[Xem thông tin sổ + lãi dự kiến]
+    end
+
+    subgraph HeThong["Hệ thống"]
+        F{Dữ liệu hợp lệ?}
+        F2[Hiển thị lỗi]
+        G{Vượt giới hạn Free?}
+        G2[Yêu cầu nâng cấp Premium]
+        H[Lưu sổ tiết kiệm vào CSDL]
+        I[Tính lãi = gốc x lãi suất x kỳ hạn chia 12]
+        I2[Tính tổng = gốc + lãi và ngày đáo hạn]
+        I3[Hiển thị chi tiết sổ tiết kiệm]
+        J{Gần đáo hạn 3-7 ngày?}
+        J2[Push notification: Sổ sắp đáo hạn]
+    end
+
+    L([Kết thúc])
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F -->|Không| F2 --> D
+    F -->|Có| G
+    G -->|Có| G2
+    G -->|Không| H
+    H --> I
+    I --> I2
+    I2 --> I3
+    I3 --> J
+    J -->|Có| J2
+    J -->|Chưa| K
     J2 --> K
-    K --> L([Kết thúc])
+    K --> L
 ```
 
 ### QT09. Quy trình tổng hợp báo cáo phân tích
@@ -274,21 +472,45 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bắt đầu]) --> B[Truy cập chức năng Báo cáo]
-    B --> C[Chọn bộ lọc thời gian]
-    C --> D[Truy vấn giao dịch theo bộ lọc]
-    D --> D2{Có dữ liệu?}
-    D2 -->|Không| D3[Hiển thị: Không có dữ liệu]
-    D2 -->|Có| E[Tổng hợp theo danh mục + thời gian]
-    E --> F[Tạo biểu đồ tròn - cơ cấu phần trăm]
-    F --> F2[Tạo biểu đồ cột và xu hướng]
-    F2 --> G[Phân tích 6 chiếc hũ tài chính]
-    G --> H[Xem biểu đồ + 6 chiếc hũ]
-    H --> I{Xuất báo cáo?}
-    I -->|Có| J[Chọn định dạng Excel hoặc PDF]
-    J --> J2[Tạo file Excel hoặc PDF]
-    J2 --> K[Tải file hoặc Chia sẻ]
-    I -->|Không| L([Kết thúc])
+    A([Bắt đầu])
+
+    subgraph NguoiDung["Người dùng"]
+        B[Truy cập chức năng Báo cáo]
+        C[Chọn bộ lọc thời gian]
+        H[Xem biểu đồ + 6 chiếc hũ]
+        J[Chọn định dạng Excel hoặc PDF]
+        K[Tải file hoặc Chia sẻ]
+    end
+
+    subgraph HeThong["Hệ thống"]
+        D[Truy vấn giao dịch theo bộ lọc]
+        D2{Có dữ liệu?}
+        D3[Hiển thị: Không có dữ liệu]
+        E[Tổng hợp theo danh mục + thời gian]
+        F[Tạo biểu đồ tròn - cơ cấu phần trăm]
+        F2[Tạo biểu đồ cột và xu hướng]
+        G[Phân tích 6 chiếc hũ tài chính]
+        I{Xuất báo cáo?}
+        J2[Tạo file Excel hoặc PDF]
+    end
+
+    L([Kết thúc])
+
+    A --> B
+    B --> C
+    C --> D
+    D --> D2
+    D2 -->|Không| D3
+    D2 -->|Có| E
+    E --> F
+    F --> F2
+    F2 --> G
+    G --> H
+    H --> I
+    I -->|Có| J
+    J --> J2
+    J2 --> K
+    I -->|Không| L
     K --> L
 ```
 
@@ -301,24 +523,49 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bắt đầu]) --> B{Chức năng cần thực hiện}
-    B -->|Chia sẻ sổ| C[Nhập email thành viên mời]
-    C --> F{Tài khoản mời tồn tại?}
-    F -->|Không| F2[Hiển thị lỗi] --> C
-    F -->|Có| G[Gửi lời mời tham gia]
-    G --> G2[Thành viên xác nhận]
-    G2 --> H[Đồng bộ dữ liệu chung realtime]
-    H --> L[Sử dụng sổ chung hoặc Xem kết quả]
-    B -->|Quản lý chuyến đi| D[Tạo sự kiện: tên - ngày - thành viên]
-    D --> I[Lưu sự kiện - tách chi tiêu riêng]
-    I --> I2[Ghi chép chi tiêu sự kiện]
+    A([Bắt đầu])
+
+    subgraph NguoiDung["Người dùng"]
+        B{Chức năng cần thực hiện}
+        C[Nhập email thành viên mời]
+        D[Tạo sự kiện: tên - ngày - thành viên]
+        E[Nhập tổng chi - danh sách - cách chia]
+        G2[Thành viên xác nhận]
+        I2[Ghi chép chi tiêu sự kiện]
+        L[Sử dụng sổ chung hoặc Xem kết quả]
+    end
+
+    subgraph HeThong["Hệ thống"]
+        F{Tài khoản mời tồn tại?}
+        F2[Hiển thị lỗi]
+        G[Gửi lời mời tham gia]
+        H[Đồng bộ dữ liệu chung realtime]
+        I[Lưu sự kiện - tách chi tiêu riêng]
+        J[Tính chia đều hoặc theo tỷ lệ]
+        K[Hiển thị số tiền mỗi người]
+        K2[Chia sẻ qua Zalo hoặc Messenger]
+    end
+
+    M([Kết thúc])
+
+    A --> B
+    B -->|Chia sẻ sổ| C
+    C --> F
+    F -->|Không| F2 --> C
+    F -->|Có| G
+    G --> G2
+    G2 --> H
+    H --> L
+    B -->|Quản lý chuyến đi| D
+    D --> I
+    I --> I2
     I2 --> L
-    B -->|Chia tiền nhóm| E[Nhập tổng chi - danh sách - cách chia]
-    E --> J[Tính chia đều hoặc theo tỷ lệ]
-    J --> K[Hiển thị số tiền mỗi người]
-    K --> K2[Chia sẻ qua Zalo hoặc Messenger]
+    B -->|Chia tiền nhóm| E
+    E --> J
+    J --> K
+    K --> K2
     K2 --> L
-    L --> M([Kết thúc])
+    L --> M
 ```
 
 ---
