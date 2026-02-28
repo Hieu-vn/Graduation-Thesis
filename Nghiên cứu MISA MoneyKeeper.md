@@ -588,6 +588,209 @@ flowchart TD
     L --> M
 ```
 
+### QT11. Quy trình chuyển khoản giữa các ví
+
+- Quy trình chuyển khoản giữa các ví được thực hiện khi người dùng đã đăng nhập và có nhu cầu chuyển tiền từ tài khoản ví này sang tài khoản ví khác trong ứng dụng MISA MoneyKeeper, ví dụ chuyển từ tài khoản Thẻ ATM về Ví tiền mặt hoặc từ tài khoản ngân hàng sang ví điện tử. Người dùng truy cập tab Tài khoản trên giao diện ứng dụng, nhấn nút ba chấm bên cạnh tài khoản nguồn muốn chuyển tiền và chọn chức năng Chuyển khoản.
+- Hệ thống hiển thị biểu mẫu chuyển khoản yêu cầu người dùng nhập các thông tin bao gồm: số tiền cần chuyển (bắt buộc, > 0), tài khoản đích muốn chuyển tới (chọn từ danh sách ví hiện có, khác ví nguồn) và diễn giải lý do chuyển khoản (tùy chọn). Ngoài ra, người dùng có thể nhấn vào phần Thêm chi tiết để bổ sung phí chuyển khoản nếu có phát sinh (ví dụ: phí chuyển khoản liên ngân hàng, phí dịch vụ).
+- Sau khi người dùng nhấn Lưu, hệ thống kiểm tra tính hợp lệ của dữ liệu đầu vào, đảm bảo số tiền > 0 và không vượt quá số dư hiện tại của ví nguồn, tài khoản đích đã được chọn và khác tài khoản nguồn. Nếu dữ liệu không hợp lệ, hệ thống hiển thị thông báo lỗi. Nếu hợp lệ, hệ thống thực hiện đồng thời hai tác vụ: trừ số tiền chuyển (cộng thêm phí nếu có) khỏi ví nguồn và cộng số tiền chuyển vào ví đích. Giao dịch chuyển khoản được lưu vào lịch sử giao dịch, đồng bộ lên cloud server và hiển thị số dư cập nhật trên cả hai ví. Quy trình hoàn tất khi số dư hai ví được cập nhật chính xác và giao dịch chuyển khoản được ghi nhận trong lịch sử.
+
+```mermaid
+flowchart TD
+    A([Bắt đầu])
+
+    subgraph NguoiDung["Người dùng"]
+        direction TB
+        B[Truy cập tab Tài khoản]
+        C[Nhấn 3 chấm bên cạnh ví nguồn]
+        D[Chọn Chuyển khoản]
+        E[Nhập: số tiền, ví đích, diễn giải]
+        F[Nhập phí CK nếu có]
+        G[Nhấn Lưu]
+        L[Xem số dư 2 ví cập nhật]
+    end
+
+    subgraph HeThong["Hệ thống"]
+        direction TB
+        H{Dữ liệu hợp lệ?}
+        H2[Hiển thị lỗi]
+        I[Trừ tiền ví nguồn]
+        I2[Cộng tiền ví đích]
+        J[Lưu giao dịch CK vào lịch sử]
+        K[Đồng bộ cloud]
+    end
+
+    M([Kết thúc])
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+    H -->|Không| H2
+    H -->|Có| I
+    I --> I2
+    I2 --> J
+    J --> K
+    K --> L
+    L --> M
+```
+
+### QT12. Quy trình tất toán sổ tiết kiệm
+
+- Quy trình tất toán sổ tiết kiệm được thực hiện khi sổ tiết kiệm đã tạo trên ứng dụng MISA MoneyKeeper đến hạn đáo hạn hoặc khi người dùng có nhu cầu rút tiền trước hạn. Trong thời gian gửi tiết kiệm, hệ thống hỗ trợ hai thao tác bổ sung: gửi thêm (tăng số tiền gốc trong sổ) hoặc rút bớt một phần tiền từ sổ tiết kiệm mà không cần tất toán toàn bộ.
+- Khi sổ tiết kiệm đến hạn tất toán, hệ thống tự động gửi push notification đến điện thoại người dùng với nội dung "Có một sổ tiết kiệm tới hạn tất toán", đồng thời trên giao diện chi tiết sổ tiết kiệm, thời gian tất toán được bôi đỏ để cảnh báo trực quan. Người dùng truy cập sổ tiết kiệm tương ứng và chọn thao tác Tất toán.
+- Hệ thống tính toán tổng số tiền nhận được khi tất toán bao gồm: tiền gốc + tiền lãi dự kiến (được tính theo số ngày gửi thực tế tuân thủ Thông tư số 14/2017/TT-NHNN). Sau khi người dùng xác nhận tất toán, hệ thống chuyển tổng tiền (gốc + lãi) vào tài khoản ví mà người dùng chọn, cập nhật trạng thái sổ tiết kiệm thành "Đã tất toán", đồng bộ dữ liệu lên cloud server. Quy trình hoàn tất khi số tiền được chuyển về ví và sổ tiết kiệm được đóng thành công.
+
+```mermaid
+flowchart TD
+    A([Bắt đầu])
+
+    subgraph NguoiDung["Người dùng"]
+        direction TB
+        B[Truy cập Sổ tiết kiệm]
+        C{Chọn thao tác}
+        D1[Gửi thêm tiền vào sổ]
+        D2[Rút bớt một phần]
+        D3[Chọn Tất toán]
+        E[Chọn ví nhận tiền]
+        F[Xác nhận tất toán]
+        K[Xem số dư ví cập nhật]
+    end
+
+    subgraph HeThong["Hệ thống"]
+        direction TB
+        G[Gửi thông báo sổ đến hạn]
+        G2[Bôi đỏ thời gian đáo hạn]
+        H[Tính gốc + lãi theo ngày thực tế]
+        I[Chuyển tiền vào ví đã chọn]
+        I2[Cập nhật trạng thái: Đã tất toán]
+        J[Đồng bộ cloud]
+    end
+
+    L([Kết thúc])
+
+    A --> B
+    B --> C
+    C -->|Gửi thêm| D1
+    C -->|Rút bớt| D2
+    C -->|Tất toán| D3
+    D1 --> L
+    D2 --> L
+    G --> G2
+    G2 --> D3
+    D3 --> E
+    E --> F
+    F --> H
+    H --> I
+    I --> I2
+    I2 --> J
+    J --> K
+    K --> L
+```
+
+### QT13. Quy trình sửa và xóa giao dịch
+
+- Quy trình sửa và xóa giao dịch được thực hiện khi người dùng đã đăng nhập và phát hiện giao dịch đã ghi chép trước đó có thông tin không chính xác (sai số tiền, sai danh mục, sai ví) hoặc giao dịch được ghi nhầm cần xóa bỏ. Người dùng truy cập lịch sử ghi chép từ giao diện Tổng quan bằng cách nhấn "Xem ghi chép", sau đó chọn giao dịch cần chỉnh sửa hoặc xóa.
+- Đối với thao tác sửa giao dịch, hệ thống hiển thị biểu mẫu chỉnh sửa chứa đầy đủ thông tin giao dịch hiện tại (loại, số tiền, danh mục, ví, ngày, ghi chú). Người dùng chỉnh sửa các trường cần thay đổi và nhấn Lưu. Hệ thống kiểm tra tính hợp lệ của dữ liệu mới, nếu hợp lệ thì cập nhật giao dịch trong cơ sở dữ liệu, tính toán lại chênh lệch số tiền và cập nhật số dư ví tương ứng (hoàn trả số tiền cũ, áp dụng số tiền mới).
+- Đối với thao tác xóa giao dịch, hệ thống hiển thị hộp thoại xác nhận xóa. Sau khi người dùng xác nhận, hệ thống xóa giao dịch khỏi cơ sở dữ liệu và hoàn trả số dư ví về trạng thái trước khi giao dịch được ghi nhận (cộng lại nếu xóa khoản chi, trừ đi nếu xóa khoản thu). Dữ liệu được đồng bộ lên cloud server sau mỗi thao tác sửa hoặc xóa. Lưu ý: dữ liệu đã xóa không thể khôi phục lại.
+
+```mermaid
+flowchart TD
+    A([Bắt đầu])
+
+    subgraph NguoiDung["Người dùng"]
+        direction TB
+        B[Tại Tổng quan nhấn Xem ghi chép]
+        C[Chọn giao dịch cần sửa hoặc xóa]
+        D{Chọn thao tác}
+        E1[Chỉnh sửa thông tin và nhấn Lưu]
+        E2[Xác nhận xóa giao dịch]
+        J[Xem lịch sử cập nhật]
+    end
+
+    subgraph HeThong["Hệ thống"]
+        direction TB
+        F{Dữ liệu mới hợp lệ?}
+        F2[Hiển thị lỗi]
+        G[Cập nhật giao dịch trong CSDL]
+        G2[Tính lại chênh lệch, cập nhật số dư ví]
+        H[Xóa giao dịch khỏi CSDL]
+        H2[Hoàn trả số dư ví]
+        I[Đồng bộ cloud]
+    end
+
+    K([Kết thúc])
+
+    A --> B
+    B --> C
+    C --> D
+    D -->|Sửa| E1
+    D -->|Xóa| E2
+    E1 --> F
+    F -->|Không| F2
+    F -->|Có| G
+    G --> G2
+    G2 --> I
+    E2 --> H
+    H --> H2
+    H2 --> I
+    I --> J
+    J --> K
+```
+
+### QT14. Quy trình quản lý hạng mục thu/chi
+
+- Quy trình quản lý hạng mục thu/chi được thực hiện khi người dùng có nhu cầu tùy chỉnh danh sách các hạng mục (danh mục) phân loại thu chi theo nhu cầu cá nhân, vượt ngoài các hạng mục mặc định của hệ thống (Ăn uống, Di chuyển, Mua sắm, Giải trí, Y tế, Giáo dục...). Người dùng truy cập giao diện quản lý hạng mục từ phần Cài đặt hoặc khi đang ghi chép giao dịch và muốn thêm hạng mục mới.
+- Hệ thống hỗ trợ ba thao tác chính: (1) Thêm mới hạng mục – người dùng nhập tên hạng mục, chọn nhóm cha (nếu là hạng mục con), chọn biểu tượng (icon) và hệ thống lưu vào danh sách hạng mục tùy chỉnh. (2) Gom nhóm hạng mục – khi người dùng muốn chuyển đổi tất cả ghi chép đã ghi từ hạng mục A sang hạng mục B, hệ thống tự động cập nhật toàn bộ giao dịch liên quan. (3) Tùy chỉnh hiển thị – người dùng có thể chọn cách hiển thị danh sách hạng mục theo dạng lưới (grid) hoặc danh sách (list) tùy theo sở thích cá nhân (tính năng từ phiên bản R70).
+- Hệ thống kiểm tra tên hạng mục không trùng lặp với hạng mục đã tồn tại, tên không để trống. Sau khi lưu, hạng mục mới xuất hiện trong danh sách chọn hạng mục khi ghi chép giao dịch. Quy trình hoàn tất khi hạng mục được tạo, gom nhóm hoặc tùy chỉnh hiển thị thành công.
+
+```mermaid
+flowchart TD
+    A([Bắt đầu])
+
+    subgraph NguoiDung["Người dùng"]
+        direction TB
+        B[Truy cập Quản lý hạng mục]
+        C{Chọn thao tác}
+        D1[Nhập tên, nhóm cha, icon]
+        D2[Chọn hạng mục A và B để gom nhóm]
+        D3[Chọn hiển thị: Lưới hoặc Danh sách]
+        E[Xác nhận lưu]
+        J[Sử dụng hạng mục khi ghi chép]
+    end
+
+    subgraph HeThong["Hệ thống"]
+        direction TB
+        F{Tên hợp lệ và không trùng?}
+        F2[Hiển thị lỗi]
+        G[Lưu hạng mục mới vào CSDL]
+        H[Chuyển tất cả ghi chép A sang B]
+        H2[Cập nhật hiển thị giao diện]
+        I[Đồng bộ cloud]
+    end
+
+    K([Kết thúc])
+
+    A --> B
+    B --> C
+    C -->|Thêm mới| D1
+    C -->|Gom nhóm| D2
+    C -->|Tùy chỉnh hiển thị| D3
+    D1 --> E
+    E --> F
+    F -->|Không| F2
+    F -->|Có| G
+    G --> I
+    D2 --> H
+    H --> I
+    D3 --> H2
+    H2 --> I
+    I --> J
+    J --> K
+```
+
 ---
 
 ## II. ĐẶC TẢ CHỨC NĂNG
@@ -627,13 +830,52 @@ flowchart TD
 | Tên chức năng | Tạo ví |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép tạo ví tài chính để quản lý tiền từ các nguồn khác nhau. Hỗ trợ 5 loại ví: tiền mặt, tài khoản ngân hàng (BIDV, Vietcombank...), ví điện tử (MoMo, ZaloPay), thẻ tín dụng và tài khoản đầu tư. Đối với thẻ tín dụng, bổ sung trường hạn mức và ngày thanh toán |
-| **Đầu vào** | Loại ví (1 trong 5 loại), tên ví, số dư ban đầu, đơn vị tiền tệ (VND/USD/EUR/vàng). Riêng thẻ tín dụng: hạn mức tín dụng, ngày thanh toán hàng tháng |
+| **Mô tả** | Cho phép tạo ví tài chính để quản lý tiền từ các nguồn khác nhau. Hỗ trợ 5 loại ví: tiền mặt, tài khoản ngân hàng (BIDV, Vietcombank...), ví điện tử (MoMo, ZaloPay), thẻ tín dụng và tài khoản đầu tư. Đối với thẻ tín dụng, bổ sung trường hạn mức và ngày thanh toán. Hỗ trợ tùy chọn "Không tính vào báo cáo" cho từng ví |
+| **Đầu vào** | Loại ví (1 trong 5 loại), tên ví, số dư ban đầu, đơn vị tiền tệ (VND/USD/EUR/vàng). Riêng thẻ tín dụng: hạn mức tín dụng, ngày thanh toán hàng tháng, bật/tắt thông báo khi đến hạn hoàn tiền |
 | **Đầu ra** | \- Ví mới được tạo, liên kết với tài khoản người dùng \- Ví hiển thị trong danh sách quản lý ví |
 | **Điều kiện trước** | \- Người dùng đã đăng nhập \- Phiên bản Free: chưa vượt giới hạn 2 ví |
 | **Điều kiện sau** | \- Ví được lưu vào CSDL và đồng bộ cloud \- Ví sẵn sàng cho ghi chép giao dịch |
 | **Ngoại lệ** | \- Số dư ban đầu < 0: hiển thị lỗi \- Tên ví trùng lặp: hiển thị lỗi \- Vượt giới hạn 2 ví (Free): yêu cầu nâng cấp Premium |
-| **Các yêu cầu đặc biệt** | Hỗ trợ đa tiền tệ (VND, USD, EUR, vàng SJC). Free: tối đa 2 ví; Premium: không giới hạn |
+| **Các yêu cầu đặc biệt** | Hỗ trợ đa tiền tệ (VND, USD, EUR, vàng SJC). Free: tối đa 2 ví; Premium: không giới hạn. Hỗ trợ tùy chọn "Không tính vào báo cáo" cho từng ví. Thẻ tín dụng: push notification nhắc hạn thanh toán |
+
+#### 2.2. Sửa/Xóa ví
+
+| Tên chức năng | Sửa/Xóa ví |
+| :---- | :---- |
+| **Tác nhân** | Người dùng |
+| **Mô tả** | Cho phép chỉnh sửa thông tin tài khoản ví đã tạo (tên ví, loại tiền tệ, cấu hình thông báo) hoặc xóa tài khoản ví không còn sử dụng khỏi hệ thống |
+| **Đầu vào** | Tài khoản ví cần sửa/xóa, thông tin chỉnh sửa (nếu sửa) |
+| **Đầu ra** | \- Sửa: thông tin ví cập nhật trên giao diện và CSDL \- Xóa: ví bị xóa khỏi danh sách quản lý |
+| **Điều kiện trước** | Người dùng đã đăng nhập, ví tồn tại trong hệ thống |
+| **Điều kiện sau** | \- Sửa: ví cập nhật trong CSDL, đồng bộ cloud \- Xóa: ví và toàn bộ giao dịch liên quan bị xóa |
+| **Ngoại lệ** | \- Tên ví trùng lặp khi sửa \- Xóa ví có giao dịch liên quan: hiển thị cảnh báo |
+| **Các yêu cầu đặc biệt** | Dữ liệu đã xóa không thể khôi phục |
+
+#### 2.3. Điều chỉnh số dư
+
+| Tên chức năng | Điều chỉnh số dư |
+| :---- | :---- |
+| **Tác nhân** | Người dùng |
+| **Mô tả** | Cho phép điều chỉnh số dư tài khoản ví khi số tiền thực tế và số dư trên ứng dụng không khớp nhau (do ghi thiếu/thừa giao dịch, sai sót nhập liệu) |
+| **Đầu vào** | Tài khoản ví cần điều chỉnh, số dư mới (giá trị thực tế) |
+| **Đầu ra** | Số dư ví cập nhật về giá trị thực tế |
+| **Điều kiện trước** | Người dùng đã đăng nhập, ví tồn tại |
+| **Điều kiện sau** | Số dư ví cập nhật, giao dịch điều chỉnh được ghi nhận trong lịch sử, đồng bộ cloud |
+| **Ngoại lệ** | Số dư mới < 0: hiển thị cảnh báo |
+| **Các yêu cầu đặc biệt** | Hệ thống tự động tạo giao dịch điều chỉnh (chênh lệch giữa số dư cũ và mới) để đảm bảo lịch sử giao dịch nhất quán |
+
+#### 2.4. Chuyển khoản giữa ví
+
+| Tên chức năng | Chuyển khoản giữa ví |
+| :---- | :---- |
+| **Tác nhân** | Người dùng |
+| **Mô tả** | Cho phép chuyển tiền giữa 2 tài khoản ví trong ứng dụng (VD: ATM → Tiền mặt, Ngân hàng → Ví điện tử). Hỗ trợ ghi nhận phí chuyển khoản nếu có phát sinh |
+| **Đầu vào** | Tài khoản nguồn, tài khoản đích, số tiền (> 0), diễn giải (tùy chọn), phí chuyển khoản (tùy chọn) |
+| **Đầu ra** | \- Số dư 2 ví cập nhật đồng thời \- Giao dịch chuyển khoản lưu vào lịch sử |
+| **Điều kiện trước** | \- Người dùng đã đăng nhập \- Có ít nhất 2 ví \- Số dư ví nguồn >= số tiền chuyển + phí |
+| **Điều kiện sau** | \- Ví nguồn: trừ (số tiền + phí) \- Ví đích: cộng số tiền \- Giao dịch đồng bộ cloud |
+| **Ngoại lệ** | \- Số tiền ≤ 0 \- Vượt số dư ví nguồn \- Ví nguồn = ví đích |
+| **Các yêu cầu đặc biệt** | Hỗ trợ ghi nhận phí chuyển khoản liên ngân hàng, phí dịch vụ thông qua phần "Thêm chi tiết" |
 
 ### 3. Chức năng Ghi chép thu chi
 
@@ -642,8 +884,8 @@ flowchart TD
 | Tên chức năng | Ghi chép thu chi thủ công |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép ghi nhận khoản thu hoặc chi bằng cách nhập tay thông tin giao dịch vào biểu mẫu. Người dùng chọn loại (thu/chi), nhập số tiền, chọn danh mục, ví, ngày và ghi chú. Sau khi lưu, hệ thống cập nhật số dư ví và kiểm tra hạn mức |
-| **Đầu vào** | Loại giao dịch (thu/chi), số tiền (> 0), danh mục chi tiêu (chọn từ danh sách), ví áp dụng, ngày giao dịch, ghi chú mô tả (tùy chọn) |
+| **Mô tả** | Cho phép ghi nhận khoản thu hoặc chi bằng cách nhập tay thông tin giao dịch vào biểu mẫu. Người dùng chọn loại (thu/chi), nhập số tiền, chọn danh mục, ví, ngày và ghi chú. Hỗ trợ tính năng "Đi vay để trả khoản này" cho phép liên kết nhanh tạo khoản vay khi ghi chi. Sau khi lưu, hệ thống cập nhật số dư ví và kiểm tra hạn mức |
+| **Đầu vào** | Loại giao dịch (thu/chi), số tiền (> 0), danh mục chi tiêu (chọn từ danh sách), ví áp dụng, ngày giao dịch, ghi chú mô tả (tùy chọn). Tùy chọn bổ sung: đối tượng thu/chi, địa điểm (qua phần "Thêm chi tiết") |
 | **Đầu ra** | \- Giao dịch được lưu vào CSDL và lịch sử \- Số dư ví được cập nhật (cộng nếu thu, trừ nếu chi) |
 | **Điều kiện trước** | \- Người dùng đã đăng nhập \- Có ít nhất 1 ví trong hệ thống |
 | **Điều kiện sau** | \- Giao dịch hiển thị trong lịch sử \- Số dư ví cập nhật \- Kích hoạt kiểm tra hạn mức chi tiêu (QT06) nếu là giao dịch chi \- Dữ liệu đồng bộ cloud |
@@ -830,3 +1072,70 @@ flowchart TD
 | **Điều kiện sau** | Kết quả tính lãi và lịch trả nợ hiển thị |
 | **Ngoại lệ** | Số tiền ≤ 0; lãi suất ≤ 0; kỳ hạn ≤ 0 |
 | **Các yêu cầu đặc biệt** | Hỗ trợ 2 phương thức: dư nợ giảm dần và trả đều hàng tháng |
+
+#### 9.6. Quản lý chuyến đi/Sự kiện
+
+| Tên chức năng | Quản lý chuyến đi/Sự kiện |
+| :---- | :---- |
+| **Tác nhân** | Người dùng |
+| **Mô tả** | Cho phép tạo sự kiện (chuyến du lịch, tiệc sinh nhật, hoạt động nhóm) và ghi chép chi tiêu riêng biệt tách khỏi chi tiêu cá nhân hàng ngày. Hỗ trợ tổng hợp chi tiêu theo sự kiện |
+| **Đầu vào** | Tên sự kiện, ngày bắt đầu/kết thúc, danh sách thành viên tham gia |
+| **Đầu ra** | \- Sự kiện được tạo \- Chi tiêu phát sinh ghi nhận riêng theo sự kiện \- Tổng hợp chi tiêu khi sự kiện kết thúc |
+| **Điều kiện trước** | Người dùng đã đăng nhập |
+| **Điều kiện sau** | \- Chi tiêu sự kiện tách khỏi chi tiêu cá nhân \- Có thể sử dụng tính năng chia tiền nhóm khi kết thúc |
+| **Ngoại lệ** | \- Tên sự kiện trống \- Ngày kết thúc trước ngày bắt đầu |
+| **Các yêu cầu đặc biệt** | Liên kết với chức năng chia tiền nhóm (9.2) |
+
+#### 9.7. Xuất dữ liệu
+
+| Tên chức năng | Xuất dữ liệu |
+| :---- | :---- |
+| **Tác nhân** | Người dùng |
+| **Mô tả** | Cho phép xuất dữ liệu giao dịch thu chi ra file để lưu trữ, phân tích bên ngoài hoặc chia sẻ. Hỗ trợ định dạng Excel và PDF |
+| **Đầu vào** | Khoảng thời gian cần xuất, định dạng file (Excel/PDF) |
+| **Đầu ra** | File Excel hoặc PDF chứa dữ liệu giao dịch, cho phép tải về thiết bị hoặc chia sẻ |
+| **Điều kiện trước** | \- Người dùng đã đăng nhập \- Có dữ liệu giao dịch trong khoảng thời gian |
+| **Điều kiện sau** | File được tạo và sẵn sàng tải/chia sẻ |
+| **Ngoại lệ** | Không có dữ liệu trong khoảng thời gian: thông báo lỗi |
+| **Các yêu cầu đặc biệt** | Hỗ trợ chia sẻ file qua email, Zalo, Messenger và các ứng dụng khác |
+
+#### 9.8. Quản lý đối tượng thu/chi
+
+| Tên chức năng | Quản lý đối tượng thu/chi |
+| :---- | :---- |
+| **Tác nhân** | Người dùng |
+| **Mô tả** | Cho phép gắn đối tượng (ông bà, bố mẹ, con cái, đồng nghiệp...) vào các ghi chép thu/chi để theo dõi chi tiêu theo từng đối tượng cụ thể. Hỗ trợ lọc và thống kê chi tiêu theo đối tượng |
+| **Đầu vào** | Tên đối tượng, gắn vào ghi chép thu/chi qua phần "Thêm chi tiết" |
+| **Đầu ra** | \- Đối tượng được gắn vào giao dịch \- Thống kê chi tiêu theo đối tượng |
+| **Điều kiện trước** | Người dùng đã đăng nhập |
+| **Điều kiện sau** | Giao dịch liên kết với đối tượng, hỗ trợ lọc báo cáo theo đối tượng |
+| **Ngoại lệ** | Tên đối tượng trống |
+| **Các yêu cầu đặc biệt** | Hỗ trợ quản lý chi tiêu cho nhiều nguồn thu nhập khác nhau |
+
+### 10. Chức năng Bảo mật và Tiện ích nâng cao
+
+#### 10.1. Cài đặt mã bảo vệ
+
+| Tên chức năng | Cài đặt mã bảo vệ |
+| :---- | :---- |
+| **Tác nhân** | Người dùng |
+| **Mô tả** | Cho phép bảo mật ứng dụng bằng mã PIN để ngăn chặn truy cập trái phép vào dữ liệu tài chính cá nhân. Người dùng cần nhập mã bảo vệ mỗi khi mở ứng dụng |
+| **Đầu vào** | Mã PIN (thường 4-6 chữ số) |
+| **Đầu ra** | Ứng dụng yêu cầu nhập mã bảo vệ khi mở |
+| **Điều kiện trước** | Người dùng đã đăng nhập |
+| **Điều kiện sau** | \- Mã bảo vệ được kích hoạt \- Mỗi lần mở app yêu cầu nhập mã |
+| **Ngoại lệ** | Quên mã bảo vệ: cần liên hệ hỗ trợ hoặc đăng nhập lại |
+| **Các yêu cầu đặc biệt** | Bảo mật tuyệt đối dữ liệu tài chính cá nhân |
+
+#### 10.2. Widget ghi chú nhanh
+
+| Tên chức năng | Widget ghi chú nhanh |
+| :---- | :---- |
+| **Tác nhân** | Người dùng |
+| **Mô tả** | Cho phép thiết lập Widget ứng dụng trên màn hình chính điện thoại để ghi chép thu chi nhanh mà không cần mở ứng dụng. Tiết kiệm thời gian cho các giao dịch thường ngày |
+| **Đầu vào** | Thiết lập widget trên màn hình chính |
+| **Đầu ra** | Widget hiển thị trên màn hình, cho phép ghi chép nhanh |
+| **Điều kiện trước** | \- Ứng dụng đã được cài đặt \- Hệ điều hành hỗ trợ widget |
+| **Điều kiện sau** | Giao dịch ghi chép nhanh từ widget được lưu vào CSDL và đồng bộ |
+| **Ngoại lệ** | Hệ điều hành không hỗ trợ widget |
+| **Các yêu cầu đặc biệt** | Hỗ trợ cả Android và iOS |
