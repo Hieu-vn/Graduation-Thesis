@@ -4,7 +4,26 @@
 
 MISA MoneyKeeper (Sổ Thu Chi MISA) là ứng dụng quản lý thu chi cá nhân phát triển bởi Công ty Cổ phần MISA (MISA JSC) – doanh nghiệp phần mềm kế toán và quản trị doanh nghiệp với hơn 30 năm kinh nghiệm và 3.000 nhân sự tại Việt Nam. Ứng dụng hoạt động trên nền tảng iOS và Android, hiện có hơn 1 triệu lượt tải trên Google Play với đánh giá 4.7/5 sao (~50.000 đánh giá), phiên bản v85.6 (cập nhật 07/01/2026). Ứng dụng tích hợp trợ lý AI mang tên **AVA** hỗ trợ ghi chép siêu tốc bằng ngôn ngữ tự nhiên và giọng nói.
 
-> **Nguồn xác minh:** helpmoneykeeper.misa.vn, moneykeeper.misa.vn, Google Play Store, Apple App Store, misa.vn (tất cả truy cập 02/2026).
+### Nguồn tham khảo chính thức
+
+Toàn bộ quy trình nghiệp vụ và đặc tả chức năng trong tài liệu này được xác minh từ các nguồn chính thức sau:
+
+| STT | Nguồn | URL | Loại |
+|-----|-------|-----|------|
+| 1 | Cổng hỗ trợ chính thức MISA MoneyKeeper | https://helpmoneykeeper.misa.vn/ | Tài liệu hướng dẫn (50+ bài viết) |
+| 2 | Trang chủ MISA MoneyKeeper | https://moneykeeper.misa.vn/ | Giới thiệu sản phẩm |
+| 3 | Google Play Store – Sổ Thu Chi MISA | https://play.google.com/store/apps/details?id=vn.misa.moneykeeper | Store listing, mô tả tính năng |
+| 4 | Apple App Store – Sổ Thu Chi MISA | https://apps.apple.com/vn/app/id1012189823 | Store listing, mô tả tính năng |
+| 5 | Trang tin MISA JSC | https://misa.vn/ | Thông tin công ty, bài viết kỹ thuật |
+
+**Cấu trúc tài liệu hướng dẫn chính thức** (helpmoneykeeper.misa.vn) gồm 7 nhóm:
+1. **Quản lý tài khoản** – 5 bài viết (tạo tài khoản, ví tiền mặt, ngân hàng, ví điện tử, thẻ tín dụng)
+2. **Quản lý chi tiêu** – 13 bài viết (ghi chép thu/chi, dự thu/dự chi, hạn mức chi, chuyến đi/sự kiện, quét hóa đơn, quản lý theo đối tượng)
+3. **Quản lý các khoản tiết kiệm** (sổ tiết kiệm, tất toán, theo dõi lãi)
+4. **Ghi chép khoản tích lũy cá nhân** (mục tiêu tiết kiệm cá nhân)
+5. **Xem thống kê báo cáo** (phân tích 6 chiếc hũ, biểu đồ thu chi)
+6. **Tiện ích** – 6 bài viết (xuất dữ liệu, widget, tra cứu tỷ giá, chia tiền, tính thuế TNCN, tính lãi vay)
+7. **Tính năng mới** (Premium, ví điện tử, chia tiền, AI AVA, giọng nói)
 
 ---
 
