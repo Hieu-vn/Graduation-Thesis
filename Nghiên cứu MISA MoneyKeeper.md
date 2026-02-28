@@ -38,22 +38,22 @@ Toàn bộ quy trình nghiệp vụ và đặc tả chức năng trong tài li�
 
 ```mermaid
 flowchart TD
-    A([Bat dau]) --> B[Mo ung dung]
-    B --> C{Chon phuong thuc dang ky}
-    C -->|Facebook/Google| D[Xac nhan uy quyen OAuth]
-    C -->|Email| E[Nhap email - mat khau - ho ten]
-    D --> F{Xac thuc OAuth thanh cong?}
-    F -->|Khong| F2[Hien thi loi xac thuc] --> D
-    F -->|Co| G[Lay thong tin tu MXH]
-    E --> H{Du lieu hop le?}
-    H -->|Khong| H2[Hien thi loi validation] --> E
-    H -->|Co| H3{Email da ton tai?}
-    H3 -->|Co| H4[Thong bao email da su dung] --> E
-    H3 -->|Khong| I[Tao tai khoan - luu CSDL]
+    A([Bắt đầu]) --> B[Mở ứng dụng]
+    B --> C{Chọn phương thức đăng ký}
+    C -->|Facebook/Google| D[Xác nhận ủy quyền OAuth]
+    C -->|Email| E[Nhập email, mật khẩu, họ tên]
+    D --> F{Xác thực OAuth thành công?}
+    F -->|Không| F2[Hiển thị lỗi xác thực] --> D
+    F -->|Có| G[Lấy thông tin từ MXH]
+    E --> H{Dữ liệu hợp lệ?}
+    H -->|Không| H2[Hiển thị lỗi validation] --> E
+    H -->|Có| H3{Email đã tồn tại?}
+    H3 -->|Có| H4[Thông báo email đã sử dụng] --> E
+    H3 -->|Không| I[Tạo tài khoản, lưu CSDL]
     G --> I
-    I --> J[Hien thi thiet lap ban dau]
-    J --> K[Tao vi dau tien va nhap so du]
-    K --> L([Ket thuc])
+    I --> J[Hiển thị thiết lập ban đầu]
+    J --> K[Tạo ví đầu tiên và nhập số dư]
+    K --> L([Kết thúc])
 ```
 
 ### QT02. Quy trình đăng nhập
@@ -65,19 +65,19 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bat dau]) --> B[Mo ung dung]
-    B --> C{Chon phuong thuc}
-    C -->|Facebook/Google| D[Xac nhan OAuth]
-    C -->|Email| E[Nhap email va mat khau]
-    D --> F[Gui yeu cau]
+    A([Bắt đầu]) --> B[Mở ứng dụng]
+    B --> C{Chọn phương thức}
+    C -->|Facebook/Google| D[Xác nhận OAuth]
+    C -->|Email| E[Nhập email và mật khẩu]
+    D --> F[Gửi yêu cầu]
     E --> F
-    F --> G{Thong tin hop le?}
-    G -->|Khong| H[Hien thi thong bao loi] --> C
-    G -->|Co| I[Tao phien lam viec]
-    I --> I2[Dong bo du lieu tu cloud]
-    I2 --> I3[Dieu huong Tong quan]
-    I3 --> J[Truy cap giao dien Tong quan]
-    J --> K([Ket thuc])
+    F --> G{Thông tin hợp lệ?}
+    G -->|Không| H[Hiển thị thông báo lỗi] --> C
+    G -->|Có| I[Tạo phiên làm việc]
+    I --> I2[Đồng bộ dữ liệu từ cloud]
+    I2 --> I3[Điều hướng Tổng quan]
+    I3 --> J[Truy cập giao diện Tổng quan]
+    J --> K([Kết thúc])
 ```
 
 ### QT03. Quy trình tạo và quản lý ví
@@ -89,21 +89,21 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bat dau]) --> B[Truy cap Quan ly vi]
-    B --> C[Chon Tao vi moi]
-    C --> D[Chon loai vi - 5 loai]
-    D --> E[Nhap ten - so du - tien te]
-    E --> F[Xac nhan tao vi]
-    F --> G{Du lieu hop le?}
-    G -->|Khong| G2[Hien thi loi validation] --> E
-    G -->|Co| H{Vuot gioi han Free 2 vi?}
-    H -->|Co| H2[Yeu cau nang cap Premium]
-    H -->|Khong| I[Luu vi vao CSDL]
-    I --> J[Dong bo cloud]
-    J --> K[Cap nhat danh sach vi]
-    K --> K2[Thong bao tao thanh cong]
-    K2 --> L[Xem vi trong danh sach]
-    L --> M([Ket thuc])
+    A([Bắt đầu]) --> B[Truy cập Quản lý ví]
+    B --> C[Chọn Tạo ví mới]
+    C --> D[Chọn loại ví - 5 loại]
+    D --> E[Nhập tên, số dư, tiền tệ]
+    E --> F[Xác nhận tạo ví]
+    F --> G{Dữ liệu hợp lệ?}
+    G -->|Không| G2[Hiển thị lỗi validation] --> E
+    G -->|Có| H{Vượt giới hạn Free 2 ví?}
+    H -->|Có| H2[Yêu cầu nâng cấp Premium]
+    H -->|Không| I[Lưu ví vào CSDL]
+    I --> J[Đồng bộ cloud]
+    J --> K[Cập nhật danh sách ví]
+    K --> K2[Thông báo tạo thành công]
+    K2 --> L[Xem ví trong danh sách]
+    L --> M([Kết thúc])
 ```
 
 ### QT04. Quy trình ghi chép giao dịch
@@ -122,27 +122,27 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bat dau]) --> B{Chon phuong thuc ghi chep}
-    B -->|Thu cong| C1[Nhap: loai - so tien - danh muc - vi - ngay]
-    B -->|AI Chat AVA| C2[Nhap text tu nhien VD: Com trua 35k]
-    B -->|Giong noi| C3[Noi truc tiep mo ta giao dich]
-    B -->|Quet hoa don| C4[Chup anh hoac chon anh hoa don]
-    C1 --> D1{Du lieu hop le?}
-    D1 -->|Khong| E1[Hien thi loi] --> C1
-    D1 -->|Co| F[Luu giao dich vao CSDL]
-    C2 --> D2[AVA phan tich ngu nghia 1-2s]
-    D2 --> D5[Hien thi preview giao dich]
-    C3 --> D3[Speech-to-text chuyen van ban]
+    A([Bắt đầu]) --> B{Chọn phương thức ghi chép}
+    B -->|Thủ công| C1[Nhập: loại, số tiền, danh mục, ví, ngày]
+    B -->|AI Chat AVA| C2[Nhập text tự nhiên VD: Cơm trưa 35k]
+    B -->|Giọng nói| C3[Nói trực tiếp mô tả giao dịch]
+    B -->|Quét hóa đơn| C4[Chụp ảnh hoặc chọn ảnh hóa đơn]
+    C1 --> D1{Dữ liệu hợp lệ?}
+    D1 -->|Không| E1[Hiển thị lỗi] --> C1
+    D1 -->|Có| F[Lưu giao dịch vào CSDL]
+    C2 --> D2[AVA phân tích ngữ nghĩa 1-2s]
+    D2 --> D5[Hiển thị preview giao dịch]
+    C3 --> D3[Speech-to-text chuyển văn bản]
     D3 --> D2
-    C4 --> D4[OCR trich xuat thong tin hoa don]
+    C4 --> D4[OCR trích xuất thông tin hóa đơn]
     D4 --> D5
-    D5 --> J[Kiem tra preview va xac nhan luu]
+    D5 --> J[Kiểm tra preview và xác nhận lưu]
     J --> F
-    F --> G[Cap nhat so du vi]
-    G --> G2[Dong bo cloud]
-    G2 --> H{Giao dich chi + co han muc?}
-    H -->|Co| I[Kiem tra han muc QT06]
-    H -->|Khong| K([Ket thuc])
+    F --> G[Cập nhật số dư ví]
+    G --> G2[Đồng bộ cloud]
+    G2 --> H{Giao dịch chi có hạn mức?}
+    H -->|Có| I[Kiểm tra hạn mức QT06]
+    H -->|Không| K([Kết thúc])
     I --> K
 ```
 
@@ -155,21 +155,21 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bat dau]) --> B[Truy cap Du thu va Du chi]
-    B --> C[Nhap: loai - so tien - danh muc - vi - chu ky - ngay BD]
-    C --> D[Bat hoac tat kich hoat]
-    D --> E[Xac nhan luu]
-    E --> F{Du lieu hop le?}
-    F -->|Khong| F2[Hien thi loi] --> C
-    F -->|Co| G[Luu cau hinh dinh ky vao CSDL]
-    G --> H[Scheduler kiem tra dinh ky hang ngay]
-    H --> I{Kich hoat + den han?}
-    I -->|Chua| H
-    I -->|Co| J[Gui push notification nhac nho]
-    J --> K[Nhan nhac nho va xac nhan giao dich]
-    K --> K2[Tao giao dich - cap nhat so du vi]
-    K2 --> K3[Ghi nhan thoi diem thuc thi tiep theo]
-    K3 --> L([Ket thuc])
+    A([Bắt đầu]) --> B[Truy cập Dự thu, Dự chi]
+    B --> C[Nhập: loại, số tiền, danh mục, ví, chu kỳ, ngày BĐ]
+    C --> D[Bật hoặc tắt kích hoạt]
+    D --> E[Xác nhận lưu]
+    E --> F{Dữ liệu hợp lệ?}
+    F -->|Không| F2[Hiển thị lỗi] --> C
+    F -->|Có| G[Lưu cấu hình định kỳ vào CSDL]
+    G --> H[Scheduler kiểm tra định kỳ hàng ngày]
+    H --> I{Kích hoạt và đến hạn?}
+    I -->|Chưa| H
+    I -->|Có| J[Gửi push notification nhắc nhở]
+    J --> K[Nhận nhắc nhở và xác nhận giao dịch]
+    K --> K2[Tạo giao dịch, cập nhật số dư ví]
+    K2 --> K3[Ghi nhận thời điểm thực thi tiếp theo]
+    K3 --> L([Kết thúc])
 ```
 
 ### QT06. Quy trình thiết lập và cảnh báo hạn mức chi tiêu
@@ -181,25 +181,25 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bat dau]) --> B[Truy cap Han muc chi]
-    B --> C[Chon Them han muc moi]
-    C --> D[Chon danh muc - nhap han muc - chu ky thang]
-    D --> E[Xac nhan luu]
-    E --> F{Han muc lon hon 0 va hop le?}
-    F -->|Khong| F2[Hien thi loi] --> D
-    F -->|Co| G{Vuot gioi han Free?}
-    G -->|Co| G2[Yeu cau nang cap Premium]
-    G -->|Khong| H[Luu cau hinh - kich hoat giam sat]
-    H --> I[Khi co giao dich chi phat sinh]
-    I --> I2[Tinh tong chi trong ky theo danh muc]
-    I2 --> J{So sanh voi han muc}
-    J -->|Duoi 80 phan tram| J1[Progress bar xanh - binh thuong]
-    J -->|80-99 phan tram| J2[Progress bar vang - canh bao]
-    J -->|Tu 100 phan tram| J3[Push notification: Vuot ngan sach]
-    J1 --> K[Xem thanh tien do hoac Nhan push notification]
+    A([Bắt đầu]) --> B[Truy cập Hạn mức chi]
+    B --> C[Chọn Thêm hạn mức mới]
+    C --> D[Chọn danh mục, nhập hạn mức, chu kỳ tháng]
+    D --> E[Xác nhận lưu]
+    E --> F{Hạn mức hợp lệ?}
+    F -->|Không| F2[Hiển thị lỗi] --> D
+    F -->|Có| G{Vượt giới hạn Free?}
+    G -->|Có| G2[Yêu cầu nâng cấp Premium]
+    G -->|Không| H[Lưu cấu hình, kích hoạt giám sát]
+    H --> I[Khi có giao dịch chi phát sinh]
+    I --> I2[Tính tổng chi trong kỳ theo danh mục]
+    I2 --> J{So sánh với hạn mức}
+    J -->|Dưới 80| J1[Progress bar xanh, bình thường]
+    J -->|80 đến 99| J2[Progress bar vàng, cảnh báo]
+    J -->|Từ 100 trở lên| J3[Push notification: Vượt ngân sách]
+    J1 --> K[Xem thanh tiến độ hoặc Nhận push notification]
     J2 --> K
     J3 --> K
-    K --> L([Ket thuc])
+    K --> L([Kết thúc])
 ```
 
 ---
@@ -213,29 +213,29 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bat dau]) --> B[Truy cap Quan ly no]
-    B --> C{Chon loai khoan}
-    C -->|Toi no| D1[Nhap: nguoi cho vay - so tien - lai suat - han tra]
-    C -->|No toi| D2[Nhap: nguoi vay - so tien - han tra]
-    D1 --> E[Xac nhan luu]
+    A([Bắt đầu]) --> B[Truy cập Quản lý nợ]
+    B --> C{Chọn loại khoản}
+    C -->|Tôi nợ| D1[Nhập: người cho vay, số tiền, lãi suất, hạn trả]
+    C -->|Nợ tôi| D2[Nhập: người vay, số tiền, hạn trả]
+    D1 --> E[Xác nhận lưu]
     D2 --> E
-    E --> F{Du lieu hop le?}
-    F -->|Khong| F2[Hien thi loi] --> D1
-    F -->|Co| G[Luu khoan no vao CSDL]
-    G --> G2{Co lai suat?}
-    G2 -->|Co| G3[Tinh lai - tao bang lich tra no]
-    G2 -->|Khong| G4[Thiet lap nhac nho]
+    E --> F{Dữ liệu hợp lệ?}
+    F -->|Không| F2[Hiển thị lỗi] --> D1
+    F -->|Có| G[Lưu khoản nợ vào CSDL]
+    G --> G2{Có lãi suất?}
+    G2 -->|Có| G3[Tính lãi, tạo bảng lịch trả nợ]
+    G2 -->|Không| G4[Thiết lập nhắc nhở]
     G3 --> G4
-    G4 --> H[Scheduler kiem tra han tra]
-    H --> I{Den han?}
-    I -->|Chua| H
-    I -->|Co| J[Gui push notification nhac nho]
-    J --> K[Ghi nhan tra no hoac thu no]
-    K --> K2[Cap nhat du no con lai]
-    K2 --> K3{Tra het - Du no = 0?}
-    K3 -->|Co| K4[Cap nhat trang thai: Hoan thanh]
-    K3 -->|Chua| H
-    K4 --> L([Ket thuc])
+    G4 --> H[Scheduler kiểm tra hạn trả]
+    H --> I{Đến hạn?}
+    I -->|Chưa| H
+    I -->|Có| J[Gửi push notification nhắc nhở]
+    J --> K[Ghi nhận trả nợ hoặc thu nợ]
+    K --> K2[Cập nhật dư nợ còn lại]
+    K2 --> K3{Trả hết, dư nợ bằng 0?}
+    K3 -->|Có| K4[Cập nhật trạng thái: Hoàn thành]
+    K3 -->|Chưa| H
+    K4 --> L([Kết thúc])
 ```
 
 ### QT08. Quy trình quản lý sổ tiết kiệm
@@ -247,23 +247,23 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bat dau]) --> B[Truy cap So tiet kiem]
-    B --> C[Chon Tao so moi]
-    C --> D[Nhap: ten - so tien - lai suat - ky han - ngan hang]
-    D --> E[Xac nhan luu]
-    E --> F{Du lieu hop le?}
-    F -->|Khong| F2[Hien thi loi] --> D
-    F -->|Co| G{Vuot gioi han Free?}
-    G -->|Co| G2[Yeu cau nang cap Premium]
-    G -->|Khong| H[Luu so tiet kiem vao CSDL]
-    H --> I[Tinh lai = goc x lai suat x ky han chia 12]
-    I --> I2[Tinh tong = goc + lai va ngay dao han]
-    I2 --> I3[Hien thi chi tiet so tiet kiem]
-    I3 --> J{Gan dao han 3-7 ngay?}
-    J -->|Co| J2[Push notification: So sap dao han]
-    J -->|Chua| K[Xem thong tin so + lai du kien]
+    A([Bắt đầu]) --> B[Truy cập Sổ tiết kiệm]
+    B --> C[Chọn Tạo sổ mới]
+    C --> D[Nhập: tên - số tiền - lãi suất - kỳ hạn - ngân hàng]
+    D --> E[Xác nhận lưu]
+    E --> F{Dữ liệu hợp lệ?}
+    F -->|Không| F2[Hiển thị lỗi] --> D
+    F -->|Có| G{Vượt giới hạn Free?}
+    G -->|Có| G2[Yêu cầu nâng cấp Premium]
+    G -->|Không| H[Lưu sổ tiết kiệm vào CSDL]
+    H --> I[Tính lãi = gốc x lãi suất x kỳ hạn chia 12]
+    I --> I2[Tính tổng = gốc + lãi và ngày đáo hạn]
+    I2 --> I3[Hiển thị chi tiết sổ tiết kiệm]
+    I3 --> J{Gần đáo hạn 3-7 ngày?}
+    J -->|Có| J2[Push notification: Sổ sắp đáo hạn]
+    J -->|Chưa| K[Xem thông tin sổ + lãi dự kiến]
     J2 --> K
-    K --> L([Ket thuc])
+    K --> L([Kết thúc])
 ```
 
 ### QT09. Quy trình tổng hợp báo cáo phân tích
@@ -274,21 +274,21 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bat dau]) --> B[Truy cap chuc nang Bao cao]
-    B --> C[Chon bo loc thoi gian]
-    C --> D[Truy van giao dich theo bo loc]
-    D --> D2{Co du lieu?}
-    D2 -->|Khong| D3[Hien thi: Khong co du lieu]
-    D2 -->|Co| E[Tong hop theo danh muc + thoi gian]
-    E --> F[Tao bieu do tron - co cau phan tram]
-    F --> F2[Tao bieu do cot va xu huong]
-    F2 --> G[Phan tich 6 chiec hu tai chinh]
-    G --> H[Xem bieu do + 6 chiec hu]
-    H --> I{Xuat bao cao?}
-    I -->|Co| J[Chon dinh dang Excel hoac PDF]
-    J --> J2[Tao file Excel hoac PDF]
-    J2 --> K[Tai file hoac Chia se]
-    I -->|Khong| L([Ket thuc])
+    A([Bắt đầu]) --> B[Truy cập chức năng Báo cáo]
+    B --> C[Chọn bộ lọc thời gian]
+    C --> D[Truy vấn giao dịch theo bộ lọc]
+    D --> D2{Có dữ liệu?}
+    D2 -->|Không| D3[Hiển thị: Không có dữ liệu]
+    D2 -->|Có| E[Tổng hợp theo danh mục + thời gian]
+    E --> F[Tạo biểu đồ tròn - cơ cấu phần trăm]
+    F --> F2[Tạo biểu đồ cột và xu hướng]
+    F2 --> G[Phân tích 6 chiếc hũ tài chính]
+    G --> H[Xem biểu đồ + 6 chiếc hũ]
+    H --> I{Xuất báo cáo?}
+    I -->|Có| J[Chọn định dạng Excel hoặc PDF]
+    J --> J2[Tạo file Excel hoặc PDF]
+    J2 --> K[Tải file hoặc Chia sẻ]
+    I -->|Không| L([Kết thúc])
     K --> L
 ```
 
@@ -301,24 +301,24 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([Bat dau]) --> B{Chuc nang can thuc hien}
-    B -->|Chia se so| C[Nhap email thanh vien moi]
-    C --> F{Tai khoan moi ton tai?}
-    F -->|Khong| F2[Hien thi loi] --> C
-    F -->|Co| G[Gui loi moi tham gia]
-    G --> G2[Thanh vien xac nhan]
-    G2 --> H[Dong bo du lieu chung realtime]
-    H --> L[Su dung so chung hoac Xem ket qua]
-    B -->|Quan ly chuyen di| D[Tao su kien: ten - ngay - thanh vien]
-    D --> I[Luu su kien - tach chi tieu rieng]
-    I --> I2[Ghi chep chi tieu su kien]
+    A([Bắt đầu]) --> B{Chức năng cần thực hiện}
+    B -->|Chia sẻ sổ| C[Nhập email thành viên mời]
+    C --> F{Tài khoản mời tồn tại?}
+    F -->|Không| F2[Hiển thị lỗi] --> C
+    F -->|Có| G[Gửi lời mời tham gia]
+    G --> G2[Thành viên xác nhận]
+    G2 --> H[Đồng bộ dữ liệu chung realtime]
+    H --> L[Sử dụng sổ chung hoặc Xem kết quả]
+    B -->|Quản lý chuyến đi| D[Tạo sự kiện: tên - ngày - thành viên]
+    D --> I[Lưu sự kiện - tách chi tiêu riêng]
+    I --> I2[Ghi chép chi tiêu sự kiện]
     I2 --> L
-    B -->|Chia tien nhom| E[Nhap tong chi - danh sach - cach chia]
-    E --> J[Tinh chia deu hoac theo ty le]
-    J --> K[Hien thi so tien moi nguoi]
-    K --> K2[Chia se qua Zalo hoac Messenger]
+    B -->|Chia tiền nhóm| E[Nhập tổng chi - danh sách - cách chia]
+    E --> J[Tính chia đều hoặc theo tỷ lệ]
+    J --> K[Hiển thị số tiền mỗi người]
+    K --> K2[Chia sẻ qua Zalo hoặc Messenger]
     K2 --> L
-    L --> M([Ket thuc])
+    L --> M([Kết thúc])
 ```
 
 ---
