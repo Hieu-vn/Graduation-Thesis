@@ -533,52 +533,60 @@ flowchart TB
 | Tên chức năng | Đăng ký tài khoản |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép người dùng tạo mới tài khoản để sử dụng hệ thống |
-| **Đầu vào** | Email, mật khẩu, họ tên, mã OTP |
-| **Đầu ra** | Tài khoản được tạo thành công |
-| **Điều kiện trước** | Email chưa tồn tại trong hệ thống |
-| **Điều kiện sau** | - Trường hợp thành công: Thông báo tạo tài khoản thành công - Trường hợp thất bại: Nhận thông báo và nguyên nhân là các trường nhập không hợp lệ |
-| **Ngoại lệ** | Email đã tồn tại; OTP sai hoặc hết hạn |
-| **Các yêu cầu đặc biệt** | OTP có hiệu lực 2 phút và chỉ sử dụng một lần |
+| **Mô tả** | Chức năng này cho phép người dùng tạo mới tài khoản để sử dụng hệ thống quản lý tài chính cá nhân. Hệ thống hỗ trợ 2 phương thức: đăng ký bằng email và đăng ký bằng tài khoản Google |
+| **Đầu vào** | - Với đăng ký bằng email: họ tên, địa chỉ email, mật khẩu, xác nhận mật khẩu, mã OTP xác thực - Với đăng ký bằng Google: xác nhận ủy quyền OAuth |
+| **Đầu ra** | Tài khoản mới được tạo thành công và lưu vào CSDL |
+| **Điều kiện trước** | - Email chưa tồn tại trong hệ thống - Người dùng chưa đăng nhập |
+| **Điều kiện sau** | - Trường hợp thành công: Thông báo tạo tài khoản thành công, người dùng có thể đăng nhập - Trường hợp thất bại: Nhận thông báo lỗi và nguyên nhân cụ thể (email đã tồn tại, OTP sai, mật khẩu không đủ mạnh) |
+| **Ngoại lệ** | - Nếu email đã tồn tại trong hệ thống, hiển thị thông báo lỗi và yêu cầu nhập email khác - Nếu mã OTP sai hoặc hết hạn (quá 2 phút), hiển thị thông báo và cho phép gửi lại OTP - Nếu xác thực OAuth thất bại, hiển thị thông báo lỗi và yêu cầu thử lại |
+| **Các yêu cầu đặc biệt** | - OTP có hiệu lực 2 phút và chỉ sử dụng một lần - Mật khẩu phải có tối thiểu 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt - Ghi log thời gian đăng ký để theo dõi |
+
+*Bảng 2.4 Đặc tả chức năng Đăng ký tài khoản*
 
 ### 2.4.1.2. Đăng nhập
 
 | Tên chức năng | Đăng nhập |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép người dùng truy cập hệ thống bằng tài khoản đã đăng ký trước đó |
-| **Đầu vào** | Email, mật khẩu |
+| **Mô tả** | Chức năng này cho phép người dùng truy cập hệ thống bằng tài khoản đã đăng ký trước đó |
+| **Đầu vào** | Thông tin đăng nhập: email, mật khẩu |
 | **Đầu ra** | Truy cập thành công vào giao diện Tổng quan hoặc thông báo lỗi |
-| **Điều kiện trước** | Người dùng đã có tài khoản hợp lệ |
-| **Điều kiện sau** | Phiên đăng nhập được tạo và lưu trạng thái đăng nhập; Người dùng được điều hướng vào trang tổng quan |
-| **Ngoại lệ** | Sai email/mật khẩu: hiển thị thông báo lỗi |
-| **Các yêu cầu đặc biệt** | |
+| **Điều kiện trước** | - Người dùng đã có tài khoản hợp lệ trong hệ thống - Người dùng chưa đăng nhập |
+| **Điều kiện sau** | - Trường hợp thành công: Phiên đăng nhập được tạo, lưu trạng thái đăng nhập và điều hướng vào trang tổng quan - Trường hợp thất bại: Hiển thị thông báo lỗi cụ thể (sai email hoặc sai mật khẩu) |
+| **Ngoại lệ** | - Nếu email không tồn tại trong hệ thống, hiển thị thông báo "Email không tồn tại" - Nếu mật khẩu sai, hiển thị thông báo "Mật khẩu không đúng" - Nếu tài khoản bị khóa, hiển thị thông báo tương ứng |
+| **Các yêu cầu đặc biệt** | - Phân quyền đăng nhập: phân biệt vai trò Người dùng và Quản trị viên - Ghi log thời gian đăng nhập để theo dõi và kiểm tra sau này |
+
+*Bảng 2.5 Đặc tả chức năng Đăng nhập*
 
 ### 2.4.1.3. Cập nhật thông tin
 
 | Tên chức năng | Cập nhật thông tin |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép người dùng cập nhật thông tin cá nhân và cấu hình ban đầu |
-| **Đầu vào** | Thông tin cá nhân, đơn vị tiền tệ, nghề nghiệp, mức lương |
-| **Đầu ra** | Thông tin được cập nhật thành công |
-| **Điều kiện trước** | Người dùng đã đăng nhập và chưa có cập nhật thông tin lần nào |
-| **Điều kiện sau** | Thông báo cập nhật tài khoản thành công |
-| **Ngoại lệ** | Dữ liệu không hợp lệ |
-| **Các yêu cầu đặc biệt** | Không cho phép bỏ trống các trường bắt buộc |
+| **Mô tả** | Chức năng này cho phép người dùng cập nhật thông tin cá nhân và cấu hình ban đầu khi đăng nhập lần đầu |
+| **Đầu vào** | Thông tin cá nhân: họ tên, ảnh đại diện, đơn vị tiền tệ mặc định, nghề nghiệp, mức lương/thu nhập hàng tháng |
+| **Đầu ra** | Thông tin cá nhân được cập nhật thành công vào CSDL |
+| **Điều kiện trước** | - Người dùng đã đăng nhập vào hệ thống - Người dùng chưa có cập nhật thông tin lần nào |
+| **Điều kiện sau** | - Trường hợp thành công: Thông báo cập nhật thành công, hệ thống ghi nhận thông tin mới - Trường hợp thất bại: Nhận thông báo lỗi và nguyên nhân là các trường nhập không hợp lệ |
+| **Ngoại lệ** | - Nếu thông tin nhập vào không hợp lệ hoặc thiếu trường bắt buộc, hiển thị thông báo lỗi cụ thể và yêu cầu nhập lại - Nếu mức lương nhập vào ≤ 0, hiển thị thông báo lỗi |
+| **Các yêu cầu đặc biệt** | - Không cho phép bỏ trống các trường bắt buộc (đơn vị tiền tệ, nghề nghiệp) - Ghi log thời gian cập nhật để theo dõi |
+
+*Bảng 2.6 Đặc tả chức năng Cập nhật thông tin*
 
 ### 2.4.1.4. Thiết lập mục tiêu
 
 | Tên chức năng | Thiết lập mục tiêu |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép người dùng tạo mục tiêu tài chính và theo dõi tiến độ thực hiện |
-| **Đầu vào** | Tên mục tiêu, số tiền mục tiêu, thời hạn, ví liên kết |
-| **Đầu ra** | Mục tiêu được tạo và hiển thị trong danh sách |
-| **Điều kiện trước** | Người dùng đã đăng nhập |
-| **Điều kiện sau** | Thông tin mục tiêu được lưu vào CSDL và khởi tạo trạng thái |
-| **Ngoại lệ** | Số tiền ≤ 0; thời hạn không hợp lệ |
-| **Các yêu cầu đặc biệt** | Hệ thống phải tự động tính toán % hoàn thành mục tiêu |
+| **Mô tả** | Chức năng này cho phép người dùng tạo mục tiêu tài chính tổng quát và theo dõi tiến độ thực hiện |
+| **Đầu vào** | Thông tin mục tiêu: tên mục tiêu, số tiền mục tiêu, thời hạn hoàn thành, ví liên kết (tùy chọn), ghi chú |
+| **Đầu ra** | Mục tiêu được tạo thành công và hiển thị trong danh sách mục tiêu |
+| **Điều kiện trước** | - Người dùng đã đăng nhập vào hệ thống |
+| **Điều kiện sau** | - Trường hợp thành công: Thông tin mục tiêu được lưu vào CSDL, khởi tạo trạng thái "Đang thực hiện" và % hoàn thành = 0% - Trường hợp thất bại: Nhận thông báo lỗi và nguyên nhân cụ thể |
+| **Ngoại lệ** | - Nếu số tiền mục tiêu ≤ 0, hiển thị thông báo "Số tiền phải lớn hơn 0" - Nếu thời hạn nhỏ hơn ngày hiện tại, hiển thị thông báo "Thời hạn không hợp lệ" - Nếu tên mục tiêu bị trùng, hiển thị cảnh báo |
+| **Các yêu cầu đặc biệt** | - Hệ thống phải tự động tính toán và cập nhật % hoàn thành mục tiêu dựa trên số dư ví liên kết - Cần có giao diện trực quan hiển thị tiến độ mục tiêu (thanh progress bar) |
+
+*Bảng 2.7 Đặc tả chức năng Thiết lập mục tiêu*
 
 ---
 
@@ -589,52 +597,60 @@ flowchart TB
 | Tên chức năng | Tạo ví |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép tạo ví tài chính để quản lý tiền |
-| **Đầu vào** | Tên ví, số dư ban đầu |
-| **Đầu ra** | Ví mới được tạo |
-| **Điều kiện trước** | Người dùng đã đăng nhập |
-| **Điều kiện sau** | Thông báo thành công hoặc thất bại |
-| **Ngoại lệ** | Số dư âm hoặc thiếu thông tin |
-| **Các yêu cầu đặc biệt** | Số dư phải ≥ 0 |
+| **Mô tả** | Chức năng này cho phép người dùng tạo ví tài chính để quản lý và theo dõi dòng tiền |
+| **Đầu vào** | Thông tin ví: tên ví, số dư ban đầu, biểu tượng/màu sắc (tùy chọn), ghi chú |
+| **Đầu ra** | Ví mới được tạo thành công và hiển thị trong danh sách ví |
+| **Điều kiện trước** | - Người dùng đã đăng nhập vào hệ thống |
+| **Điều kiện sau** | - Trường hợp thành công: Thông báo tạo ví thành công, ví mới hiển thị trong danh sách - Trường hợp thất bại: Nhận thông báo lỗi và nguyên nhân cụ thể |
+| **Ngoại lệ** | - Nếu số dư ban đầu < 0, hiển thị thông báo "Số dư không được âm" - Nếu tên ví bị trùng, hiển thị cảnh báo - Nếu thiếu thông tin bắt buộc (tên ví), hiển thị thông báo lỗi |
+| **Các yêu cầu đặc biệt** | - Số dư phải ≥ 0 - Giao diện quản lý danh sách ví phải dễ sử dụng, hỗ trợ thao tác nhanh |
+
+*Bảng 2.8 Đặc tả chức năng Tạo ví*
 
 ### 2.4.2.2. Sửa ví
 
 | Tên chức năng | Sửa ví |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép chỉnh sửa thông tin ví |
-| **Đầu vào** | Tên ví, số dư điều chỉnh |
-| **Đầu ra** | Ví được cập nhật |
-| **Điều kiện trước** | Người dùng đã đăng nhập và ví tồn tại |
-| **Điều kiện sau** | Thông tin ví được cập nhật |
-| **Ngoại lệ** | Không tìm thấy ví |
-| **Các yêu cầu đặc biệt** | |
+| **Mô tả** | Chức năng này cho phép người dùng chỉnh sửa thông tin ví đã tạo |
+| **Đầu vào** | Thông tin ví cần cập nhật: tên ví, số dư điều chỉnh, biểu tượng/màu sắc, ghi chú |
+| **Đầu ra** | Thông tin ví được cập nhật thành công vào CSDL |
+| **Điều kiện trước** | - Người dùng đã đăng nhập vào hệ thống - Ví phải tồn tại và thuộc quyền sở hữu của người dùng |
+| **Điều kiện sau** | - Trường hợp thành công: Thông báo cập nhật ví thành công - Trường hợp thất bại: Nhận thông báo lỗi và nguyên nhân cụ thể |
+| **Ngoại lệ** | - Nếu ví không tồn tại trên hệ thống, hiển thị thông báo lỗi  - Nếu thông tin nhập không hợp lệ, hiển thị thông báo lỗi |
+| **Các yêu cầu đặc biệt** | - Ghi log thời gian cập nhật thông tin ví để theo dõi - Nếu điều chỉnh số dư thủ công, hệ thống phải tạo giao dịch điều chỉnh tương ứng |
+
+*Bảng 2.9 Đặc tả chức năng Sửa ví*
 
 ### 2.4.2.3. Cấu hình ngân sách chi tiêu cho ví
 
 | Tên chức năng | Cấu hình ngân sách chi tiêu theo ví |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép người dùng thiết lập hạn mức chi tiêu cho từng ví |
-| **Đầu vào** | Ví áp dụng, hạn mức chi tiêu, chu kỳ áp dụng, ngưỡng cảnh báo |
-| **Đầu ra** | Cấu hình ngân sách được lưu |
-| **Điều kiện trước** | Người dùng đã đăng nhập và ví tồn tại |
-| **Điều kiện sau** | Hệ thống giám sát chi tiêu theo hạn mức đã cấu hình |
-| **Ngoại lệ** | Hạn mức ≤ 0; ví không tồn tại |
-| **Các yêu cầu đặc biệt** | |
+| **Mô tả** | Chức năng này cho phép người dùng thiết lập hạn mức chi tiêu cho từng ví theo chu kỳ thời gian |
+| **Đầu vào** | Thông tin cấu hình: ví áp dụng, hạn mức chi tiêu (VNĐ), chu kỳ áp dụng (tháng/quý/năm), ngưỡng cảnh báo (%) |
+| **Đầu ra** | Cấu hình ngân sách được lưu thành công vào CSDL |
+| **Điều kiện trước** | - Người dùng đã đăng nhập vào hệ thống - Ví phải tồn tại và thuộc quyền sở hữu của người dùng |
+| **Điều kiện sau** | - Trường hợp thành công: Hệ thống bắt đầu giám sát chi tiêu theo hạn mức đã cấu hình - Trường hợp thất bại: Nhận thông báo lỗi và nguyên nhân cụ thể |
+| **Ngoại lệ** | - Nếu hạn mức ≤ 0, hiển thị thông báo "Hạn mức phải lớn hơn 0" - Nếu ví không tồn tại, hiển thị thông báo lỗi - Nếu ngưỡng cảnh báo không nằm trong khoảng 1-100%, hiển thị lỗi |
+| **Các yêu cầu đặc biệt** | - Ngưỡng cảnh báo mặc định là 80% nếu người dùng không thiết lập - Ghi log thời gian cấu hình |
+
+*Bảng 2.10 Đặc tả chức năng Cấu hình ngân sách chi tiêu cho ví*
 
 ### 2.4.2.4. Cấu hình mục tiêu cho ví
 
 | Tên chức năng | Cấu hình mục tiêu theo ví |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép thiết lập mục tiêu tài chính và liên kết với một ví cụ thể |
-| **Đầu vào** | Tên mục tiêu, số tiền mục tiêu, thời hạn, ví áp dụng |
-| **Đầu ra** | Mục tiêu được tạo và liên kết với ví |
-| **Điều kiện trước** | Người dùng đã đăng nhập và ví tồn tại |
-| **Điều kiện sau** | Hệ thống theo dõi tiến độ mục tiêu và cập nhật số dư ví khi phát sinh giao dịch |
-| **Ngoại lệ** | Ví không đủ số dư; dữ liệu không hợp lệ |
-| **Các yêu cầu đặc biệt** | Tự động cập nhật % hoàn thành và trạng thái mục tiêu |
+| **Mô tả** | Chức năng này cho phép người dùng thiết lập mục tiêu tài chính và liên kết với một ví cụ thể để theo dõi |
+| **Đầu vào** | Thông tin mục tiêu: tên mục tiêu, số tiền mục tiêu (VNĐ), thời hạn hoàn thành, ví áp dụng |
+| **Đầu ra** | Mục tiêu được tạo, liên kết với ví và hiển thị trong danh sách |
+| **Điều kiện trước** | - Người dùng đã đăng nhập vào hệ thống - Ví phải tồn tại và thuộc quyền sở hữu của người dùng |
+| **Điều kiện sau** | - Trường hợp thành công: Hệ thống theo dõi tiến độ mục tiêu, tự động cập nhật khi phát sinh giao dịch với ví liên kết - Trường hợp thất bại: Nhận thông báo lỗi |
+| **Ngoại lệ** | - Nếu ví không tồn tại, hiển thị thông báo lỗi - Nếu số tiền mục tiêu ≤ 0, hiển thị thông báo lỗi - Nếu thời hạn nhỏ hơn ngày hiện tại, hiển thị lỗi |
+| **Các yêu cầu đặc biệt** | - Tự động cập nhật % hoàn thành và trạng thái mục tiêu khi có giao dịch mới - Gửi thông báo khi mục tiêu đạt 100% hoặc quá hạn |
+
+*Bảng 2.11 Đặc tả chức năng Cấu hình mục tiêu cho ví*
 
 ---
 
@@ -645,65 +661,75 @@ flowchart TB
 | Tên chức năng | Tạo giao dịch thủ công |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Ghi nhận khoản thu hoặc chi phát sinh |
-| **Đầu vào** | Số tiền, danh mục, ngày, ví, ghi chú |
-| **Đầu ra** | Giao dịch được lưu |
-| **Điều kiện trước** | Tài khoản đã đăng nhập và ví tồn tại |
-| **Điều kiện sau** | Số dư ví được cập nhật |
-| **Ngoại lệ** | Số tiền ≤ 0 |
-| **Các yêu cầu đặc biệt** | Kiểm tra và cảnh báo ngân sách |
+| **Mô tả** | Chức năng này cho phép người dùng ghi nhận một khoản thu hoặc chi phát sinh vào hệ thống |
+| **Đầu vào** | Thông tin giao dịch: loại giao dịch (thu/chi), số tiền, danh mục, ngày giao dịch, ví áp dụng, ghi chú (tùy chọn) |
+| **Đầu ra** | Giao dịch được lưu vào CSDL, số dư ví được cập nhật |
+| **Điều kiện trước** | - Người dùng đã đăng nhập vào hệ thống - Ví phải tồn tại và thuộc quyền sở hữu |
+| **Điều kiện sau** | - Trường hợp thành công: Giao dịch được lưu, số dư ví cập nhật, kích hoạt kiểm tra ngân sách (P13) - Trường hợp thất bại: Nhận thông báo lỗi và nguyên nhân cụ thể |
+| **Ngoại lệ** | - Nếu số tiền ≤ 0, hiển thị thông báo "Số tiền phải lớn hơn 0" - Nếu ví không tồn tại, hiển thị lỗi - Nếu thiếu danh mục hoặc ví, hiển thị thông báo yêu cầu chọn |
+| **Các yêu cầu đặc biệt** | - Sau khi tạo giao dịch thành công, hệ thống tự động kiểm tra ngân sách và tạo cảnh báo nếu vượt ngưỡng - Tự động cập nhật % hoàn thành mục tiêu nếu ví có liên kết mục tiêu |
+
+*Bảng 2.12 Đặc tả chức năng Tạo giao dịch thủ công*
 
 ### 2.4.3.2. Tạo dữ liệu giao dịch từ file Excel
 
 | Tên chức năng | Tạo dữ liệu giao dịch từ file Excel |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Nhập hàng loạt giao dịch từ file Excel |
-| **Đầu vào** | File Excel đúng định dạng |
-| **Đầu ra** | Danh sách giao dịch hợp lệ được lưu |
-| **Điều kiện trước** | Tài khoản đã đăng nhập và file đúng cấu trúc mẫu |
-| **Điều kiện sau** | Số dư ví được cập nhật |
-| **Ngoại lệ** | Sai định dạng file |
-| **Các yêu cầu đặc biệt** | Hiển thị bản xem trước trước khi lưu |
+| **Mô tả** | Chức năng này cho phép người dùng nhập hàng loạt giao dịch từ file Excel theo mẫu chuẩn của hệ thống |
+| **Đầu vào** | File Excel (.xlsx) đúng định dạng mẫu, chứa các cột: loại giao dịch, số tiền, danh mục, ngày, ví, ghi chú |
+| **Đầu ra** | Danh sách giao dịch hợp lệ được lưu vào CSDL, danh sách dòng lỗi được hiển thị |
+| **Điều kiện trước** | - Người dùng đã đăng nhập vào hệ thống - File Excel đúng cấu trúc mẫu của hệ thống |
+| **Điều kiện sau** | - Trường hợp thành công: Các giao dịch hợp lệ được lưu, số dư ví được cập nhật - Trường hợp thất bại: Hiển thị danh sách dòng lỗi với nguyên nhân cụ thể |
+| **Ngoại lệ** | - Nếu file không đúng định dạng (.xlsx), hiển thị thông báo "File không đúng định dạng" - Nếu file có dòng dữ liệu không hợp lệ (số tiền âm, danh mục không tồn tại), hiển thị chi tiết từng dòng lỗi - Nếu file rỗng, hiển thị thông báo "Không có dữ liệu" |
+| **Các yêu cầu đặc biệt** | - Hiển thị bản xem trước trước khi xác nhận lưu - Hỗ trợ tải file mẫu Excel từ hệ thống - Ghi log số lượng giao dịch import thành công và thất bại |
+
+*Bảng 2.13 Đặc tả chức năng Tạo dữ liệu giao dịch từ file Excel*
 
 ### 2.4.3.3. Tạo khoản thu chi cố định
 
 | Tên chức năng | Tạo khoản thu chi cố định |
 | :---- | :---- |
-| **Tác nhân** | Người dùng, Hệ thống |
-| **Mô tả** | Cho phép người dùng cấu hình giao dịch định kỳ và hệ thống tự động tạo giao dịch theo chu kỳ đã thiết lập |
-| **Đầu vào** | Ví áp dụng, loại giao dịch (thu/chi), số tiền, danh mục, ngày bắt đầu, chu kỳ lặp (ngày/tuần/tháng/năm) |
-| **Đầu ra** | Giao dịch định kỳ được tạo tự động; thông báo gửi đến người dùng |
-| **Điều kiện trước** | Người dùng đã đăng nhập; ví tồn tại và hợp lệ |
-| **Điều kiện sau** | Cấu hình giao dịch định kỳ được lưu vào CSDL; hệ thống tự động tạo giao dịch khi đến hạn; số dư ví được cập nhật |
-| **Ngoại lệ** | Ví không tồn tại; ví không đủ số dư (đối với giao dịch chi); lỗi hệ thống khi thực thi tác vụ tự động |
-| **Các yêu cầu đặc biệt** | |
+| **Tác nhân** | Người dùng, Hệ thống (Scheduler) |
+| **Mô tả** | Chức năng này cho phép người dùng cấu hình giao dịch định kỳ. Hệ thống tự động tạo giao dịch theo chu kỳ đã thiết lập |
+| **Đầu vào** | Thông tin cấu hình: ví áp dụng, loại giao dịch (thu/chi), số tiền, danh mục, ngày bắt đầu, chu kỳ lặp (ngày/tuần/tháng/năm), trạng thái (bật/tắt) |
+| **Đầu ra** | Cấu hình định kỳ được lưu; hệ thống tự động tạo giao dịch khi đến hạn |
+| **Điều kiện trước** | - Người dùng đã đăng nhập vào hệ thống - Ví tồn tại và hợp lệ |
+| **Điều kiện sau** | - Trường hợp thành công: Cấu hình được lưu vào CSDL; hệ thống tự động tạo giao dịch khi đến hạn và cập nhật số dư ví - Trường hợp thất bại: Nhận thông báo lỗi |
+| **Ngoại lệ** | - Nếu ví không tồn tại, hiển thị thông báo lỗi - Nếu số tiền ≤ 0, hiển thị thông báo lỗi - Nếu hệ thống gặp lỗi khi thực thi tác vụ tự động, ghi log lỗi và gửi thông báo cho người dùng |
+| **Các yêu cầu đặc biệt** | - Hệ thống phải hỗ trợ bật/tắt cấu hình định kỳ - Gửi thông báo cho người dùng sau mỗi lần tạo giao dịch tự động - Ghi log thời gian thực thi và kết quả |
+
+*Bảng 2.14 Đặc tả chức năng Tạo khoản thu chi cố định*
 
 ### 2.4.3.4. Xem danh sách giao dịch theo bộ lọc
 
 | Tên chức năng | Xem danh sách giao dịch theo bộ lọc |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép người dùng tra cứu và xem danh sách giao dịch đã ghi nhận theo các tiêu chí lọc |
-| **Đầu vào** | Bộ lọc: khoảng thời gian, loại giao dịch (thu/chi), danh mục, ví |
-| **Đầu ra** | Danh sách giao dịch phù hợp với tiêu chí lọc |
-| **Điều kiện trước** | Người dùng đã đăng nhập |
-| **Điều kiện sau** | Danh sách giao dịch được hiển thị trên giao diện |
-| **Ngoại lệ** | Không có dữ liệu phù hợp với bộ lọc |
-| **Các yêu cầu đặc biệt** | Hỗ trợ phân trang; sắp xếp theo ngày giao dịch mặc định |
+| **Mô tả** | Chức năng này cho phép người dùng tra cứu và xem danh sách giao dịch đã ghi nhận theo các tiêu chí lọc |
+| **Đầu vào** | Bộ lọc: khoảng thời gian (từ ngày – đến ngày), loại giao dịch (thu/chi/tất cả), danh mục, ví, từ khóa tìm kiếm |
+| **Đầu ra** | Danh sách giao dịch phù hợp với tiêu chí lọc, phân trang |
+| **Điều kiện trước** | - Người dùng đã đăng nhập vào hệ thống |
+| **Điều kiện sau** | - Trường hợp thành công: Danh sách giao dịch được hiển thị trên giao diện - Trường hợp không có dữ liệu: Hiển thị thông báo "Không có giao dịch phù hợp" |
+| **Ngoại lệ** | - Nếu không có dữ liệu phù hợp, hiển thị thông báo rỗng phù hợp |
+| **Các yêu cầu đặc biệt** | - Hỗ trợ phân trang - Sắp xếp mặc định theo ngày giao dịch giảm dần - Giao diện phải hiển thị tổng thu, tổng chi trong khoảng thời gian đã lọc |
+
+*Bảng 2.15 Đặc tả chức năng Xem danh sách giao dịch theo bộ lọc*
 
 ### 2.4.3.5. Xuất dữ liệu giao dịch ra file Excel
 
 | Tên chức năng | Xuất dữ liệu giao dịch ra file Excel |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép người dùng xuất danh sách giao dịch ra file Excel để lưu trữ hoặc phân tích ngoại tuyến |
+| **Mô tả** | Chức năng này cho phép người dùng xuất danh sách giao dịch ra file Excel để lưu trữ hoặc phân tích ngoại tuyến |
 | **Đầu vào** | Bộ lọc: khoảng thời gian, loại giao dịch, danh mục, ví |
-| **Đầu ra** | File Excel chứa danh sách giao dịch theo bộ lọc |
-| **Điều kiện trước** | Người dùng đã đăng nhập; có dữ liệu giao dịch trong hệ thống |
-| **Điều kiện sau** | File Excel được tạo và tải về thiết bị người dùng |
-| **Ngoại lệ** | Không có dữ liệu để xuất; lỗi tạo file |
-| **Các yêu cầu đặc biệt** | File xuất đúng định dạng mẫu của hệ thống |
+| **Đầu ra** | File Excel (.xlsx) chứa danh sách giao dịch theo bộ lọc |
+| **Điều kiện trước** | - Người dùng đã đăng nhập - Có dữ liệu giao dịch trong hệ thống phù hợp với bộ lọc |
+| **Điều kiện sau** | - Trường hợp thành công: File Excel được tạo và tải về thiết bị - Trường hợp thất bại: Hiển thị thông báo lỗi |
+| **Ngoại lệ** | - Nếu không có dữ liệu để xuất, hiển thị thông báo "Không có dữ liệu phù hợp" - Nếu xảy ra lỗi khi tạo file, hiển thị thông báo lỗi hệ thống |
+| **Các yêu cầu đặc biệt** | - File xuất đúng định dạng mẫu của hệ thống - File phải có header rõ ràng và dữ liệu được format đúng kiểu |
+
+*Bảng 2.16 Đặc tả chức năng Xuất dữ liệu giao dịch ra file Excel*
 
 ---
 
@@ -714,39 +740,45 @@ flowchart TB
 | Tên chức năng | Cấu hình ngưỡng cảnh báo chi tiêu theo ví |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép người dùng thiết lập ngưỡng phần trăm để hệ thống tạo cảnh báo khi chi tiêu của một ví đạt hoặc vượt ngưỡng |
-| **Đầu vào** | Ví áp dụng, hạn mức chi tiêu, chu kỳ (tháng/quý/năm), ngưỡng cảnh báo (%) |
-| **Đầu ra** | Cấu hình ngưỡng được lưu thành công |
-| **Điều kiện trước** | Người dùng đã đăng nhập; ví tồn tại |
-| **Điều kiện sau** | Hệ thống giám sát chi tiêu theo ví và tạo cảnh báo khi đạt ngưỡng |
-| **Ngoại lệ** | Hạn mức ≤ 0; ví không tồn tại; ngưỡng không hợp lệ |
-| **Các yêu cầu đặc biệt** | Ngưỡng mặc định là 80%; hỗ trợ cảnh báo "Sắp vượt" và "Đã vượt" ngân sách |
+| **Mô tả** | Chức năng này cho phép người dùng thiết lập ngưỡng phần trăm để hệ thống tự động tạo cảnh báo khi chi tiêu của một ví đạt hoặc vượt ngưỡng |
+| **Đầu vào** | Thông tin cấu hình: ví áp dụng, hạn mức chi tiêu (VNĐ), chu kỳ (tháng/quý/năm), ngưỡng cảnh báo (%) |
+| **Đầu ra** | Cấu hình ngưỡng được lưu thành công vào CSDL |
+| **Điều kiện trước** | - Người dùng đã đăng nhập - Ví tồn tại và thuộc quyền sở hữu |
+| **Điều kiện sau** | - Trường hợp thành công: Hệ thống giám sát chi tiêu theo ví và tạo cảnh báo khi đạt ngưỡng - Trường hợp thất bại: Nhận thông báo lỗi |
+| **Ngoại lệ** | - Nếu hạn mức ≤ 0, hiển thị "Hạn mức phải lớn hơn 0" - Nếu ví không tồn tại, hiển thị lỗi - Nếu ngưỡng ngoài khoảng 1-100%, hiển thị lỗi |
+| **Các yêu cầu đặc biệt** | - Ngưỡng mặc định 80% - Hỗ trợ hai mức: "Sắp vượt" (đạt ngưỡng) và "Đã vượt" (đạt 100%) - Ghi log cấu hình |
+
+*Bảng 2.17 Đặc tả chức năng Cấu hình ngưỡng CB theo ví*
 
 ### 2.4.4.2. Cấu hình ngưỡng thông báo khi vượt quá chi tiêu theo danh mục
 
 | Tên chức năng | Cấu hình ngưỡng cảnh báo chi tiêu theo danh mục |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép người dùng thiết lập ngưỡng cảnh báo cho từng danh mục chi tiêu cụ thể |
-| **Đầu vào** | Danh mục áp dụng, hạn mức chi tiêu, chu kỳ (tháng/quý/năm), ngưỡng cảnh báo (%) |
-| **Đầu ra** | Cấu hình ngưỡng được lưu thành công |
-| **Điều kiện trước** | Người dùng đã đăng nhập; danh mục hợp lệ |
-| **Điều kiện sau** | Hệ thống giám sát chi tiêu theo danh mục và tạo cảnh báo khi đạt ngưỡng |
-| **Ngoại lệ** | Hạn mức ≤ 0; danh mục không tồn tại |
-| **Các yêu cầu đặc biệt** | Ngưỡng mặc định là 80%; tương tự cấu hình theo ví |
+| **Mô tả** | Chức năng này cho phép người dùng thiết lập ngưỡng cảnh báo cho từng danh mục chi tiêu cụ thể |
+| **Đầu vào** | Thông tin cấu hình: danh mục áp dụng, hạn mức chi tiêu (VNĐ), chu kỳ (tháng/quý/năm), ngưỡng cảnh báo (%) |
+| **Đầu ra** | Cấu hình ngưỡng được lưu thành công vào CSDL |
+| **Điều kiện trước** | - Người dùng đã đăng nhập - Danh mục hợp lệ và tồn tại |
+| **Điều kiện sau** | - Trường hợp thành công: Hệ thống giám sát chi tiêu theo danh mục và tạo cảnh báo khi đạt ngưỡng - Trường hợp thất bại: Nhận thông báo lỗi |
+| **Ngoại lệ** | - Nếu hạn mức ≤ 0, hiển thị lỗi - Nếu danh mục không tồn tại, hiển thị lỗi |
+| **Các yêu cầu đặc biệt** | - Tương tự cấu hình theo ví, ngưỡng mặc định 80% |
+
+*Bảng 2.18 Đặc tả chức năng Cấu hình ngưỡng CB theo danh mục*
 
 ### 2.4.4.3. Xem danh sách cảnh báo chi tiêu theo bộ lọc
 
 | Tên chức năng | Xem danh sách cảnh báo chi tiêu |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép người dùng xem lại các cảnh báo vượt ngân sách đã được hệ thống tạo |
+| **Mô tả** | Chức năng này cho phép người dùng xem lại các cảnh báo vượt ngân sách đã được hệ thống tạo |
 | **Đầu vào** | Bộ lọc: khoảng thời gian, loại cảnh báo (sắp vượt/đã vượt), ví hoặc danh mục |
-| **Đầu ra** | Danh sách cảnh báo chi tiêu phù hợp |
-| **Điều kiện trước** | Người dùng đã đăng nhập |
-| **Điều kiện sau** | Danh sách cảnh báo được hiển thị trên giao diện |
-| **Ngoại lệ** | Không có cảnh báo trong khoảng thời gian đã chọn |
-| **Các yêu cầu đặc biệt** | Hiển thị rõ mức độ cảnh báo (sắp vượt 80% / đã vượt 100%) |
+| **Đầu ra** | Danh sách cảnh báo chi tiêu phù hợp, phân trang |
+| **Điều kiện trước** | - Người dùng đã đăng nhập |
+| **Điều kiện sau** | - Trường hợp thành công: Danh sách cảnh báo hiển thị trên giao diện - Trường hợp không có dữ liệu: Hiển thị thông báo "Không có cảnh báo" |
+| **Ngoại lệ** | - Nếu không có cảnh báo trong khoảng thời gian, hiển thị thông báo rỗng |
+| **Các yêu cầu đặc biệt** | - Hiển thị rõ mức độ cảnh báo bằng màu sắc (vàng = sắp vượt 80%, đỏ = đã vượt 100%) - Hỗ trợ phân trang |
+
+*Bảng 2.19 Đặc tả chức năng Xem danh sách cảnh báo chi tiêu*
 
 ---
 
@@ -757,39 +789,45 @@ flowchart TB
 | Tên chức năng | Bật/Tắt thông báo |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép người dùng kích hoạt hoặc vô hiệu hóa chức năng nhận thông báo |
-| **Đầu vào** | Trạng thái bật hoặc tắt |
-| **Đầu ra** | Cập nhật trạng thái cấu hình thông báo |
-| **Điều kiện trước** | Người dùng đã đăng nhập vào hệ thống |
-| **Điều kiện sau** | Hệ thống ghi nhận trạng thái mới vào CSDL |
-| **Ngoại lệ** | Lỗi hệ thống khi cập nhật trạng thái |
-| **Các yêu cầu đặc biệt** | Thay đổi có hiệu lực ngay lập tức đối với các lần gửi tiếp theo |
+| **Mô tả** | Chức năng này cho phép người dùng kích hoạt hoặc vô hiệu hóa chức năng nhận thông báo từ hệ thống |
+| **Đầu vào** | Trạng thái: bật hoặc tắt |
+| **Đầu ra** | Cập nhật trạng thái cấu hình thông báo thành công |
+| **Điều kiện trước** | - Người dùng đã đăng nhập vào hệ thống |
+| **Điều kiện sau** | - Trường hợp thành công: Hệ thống ghi nhận trạng thái mới, áp dụng ngay lập tức - Trường hợp thất bại: Hiển thị thông báo lỗi hệ thống |
+| **Ngoại lệ** | - Nếu xảy ra lỗi hệ thống khi cập nhật, hiển thị thông báo lỗi và giữ nguyên trạng thái cũ |
+| **Các yêu cầu đặc biệt** | - Thay đổi có hiệu lực ngay lập tức - Ghi log thời gian thay đổi |
+
+*Bảng 2.20 Đặc tả chức năng Bật/Tắt thông báo*
 
 ### 2.4.5.2. Cấu hình thời gian gửi thông báo
 
 | Tên chức năng | Cấu hình thời gian gửi thông báo |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép người dùng thiết lập lịch gửi báo cáo và thông báo định kỳ theo tuần, tháng, quý hoặc năm |
-| **Đầu vào** | Tần suất gửi, thời điểm gửi, loại báo cáo |
-| **Đầu ra** | Cấu hình thông báo được lưu thành công |
-| **Điều kiện trước** | Người dùng đã đăng nhập vào hệ thống |
-| **Điều kiện sau** | Lịch gửi thông báo được lưu vào cơ sở dữ liệu và hệ thống tự động thực thi theo cấu hình |
-| **Ngoại lệ** | Thời gian cấu hình không hợp lệ hoặc trùng lặp |
-| **Các yêu cầu đặc biệt** | Hệ thống phải hỗ trợ xử lý tự động theo lịch |
+| **Mô tả** | Chức năng này cho phép người dùng thiết lập lịch gửi báo cáo và thông báo định kỳ |
+| **Đầu vào** | Thông tin cấu hình: tần suất gửi (tuần/tháng/quý/năm), thời điểm gửi (ngày, giờ), loại báo cáo đính kèm |
+| **Đầu ra** | Cấu hình lịch gửi thông báo được lưu thành công |
+| **Điều kiện trước** | - Người dùng đã đăng nhập - Chức năng thông báo đang được bật |
+| **Điều kiện sau** | - Trường hợp thành công: Lịch gửi thông báo được lưu vào CSDL, Scheduler tự động thực thi - Trường hợp thất bại: Hiển thị thông báo lỗi |
+| **Ngoại lệ** | - Nếu thời gian cấu hình không hợp lệ, hiển thị lỗi - Nếu cấu hình bị trùng lặp, hiển thị cảnh báo |
+| **Các yêu cầu đặc biệt** | - Hệ thống Scheduler phải hỗ trợ xử lý tự động theo lịch - Ghi log mỗi lần gửi thông báo |
+
+*Bảng 2.21 Đặc tả chức năng Cấu hình thời gian gửi thông báo*
 
 ### 2.4.5.3. Xem danh sách thông báo theo bộ lọc
 
 | Tên chức năng | Xem danh sách thông báo |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Cho phép người dùng xem lại các thông báo đã nhận từ hệ thống theo tiêu chí lọc |
+| **Mô tả** | Chức năng này cho phép người dùng xem lại các thông báo đã nhận từ hệ thống theo tiêu chí lọc |
 | **Đầu vào** | Bộ lọc: khoảng thời gian, loại thông báo (cảnh báo ngân sách, mục tiêu, định kỳ, hệ thống), trạng thái (đã đọc/chưa đọc) |
-| **Đầu ra** | Danh sách thông báo phù hợp |
-| **Điều kiện trước** | Người dùng đã đăng nhập |
-| **Điều kiện sau** | Danh sách thông báo được hiển thị; trạng thái thông báo được cập nhật (đánh dấu đã đọc) |
-| **Ngoại lệ** | Không có thông báo phù hợp |
-| **Các yêu cầu đặc biệt** | Hỗ trợ phân trang; hiển thị badge số thông báo chưa đọc |
+| **Đầu ra** | Danh sách thông báo phù hợp, phân trang |
+| **Điều kiện trước** | - Người dùng đã đăng nhập |
+| **Điều kiện sau** | - Trường hợp thành công: Danh sách thông báo hiển thị, trạng thái cập nhật thành "đã đọc" khi mở xem - Trường hợp không có dữ liệu: Hiển thị danh sách rỗng |
+| **Ngoại lệ** | - Nếu không có thông báo phù hợp bộ lọc, hiển thị danh sách rỗng |
+| **Các yêu cầu đặc biệt** | - Hỗ trợ phân trang - Hiển thị badge số thông báo chưa đọc trên icon thông báo |
+
+*Bảng 2.22 Đặc tả chức năng Xem danh sách thông báo*
 
 ---
 
@@ -800,39 +838,45 @@ flowchart TB
 | Tên chức năng | Báo cáo chi tiêu theo ví |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Hiển thị thống kê tổng thu và chi của từng ví trong khoảng thời gian xác định |
-| **Đầu vào** | Khoảng thời gian cần xem |
-| **Đầu ra** | Biểu đồ và bảng thống kê theo từng ví |
-| **Điều kiện trước** | Có dữ liệu giao dịch trong hệ thống |
-| **Điều kiện sau** | Báo cáo được hiển thị trên giao diện |
-| **Ngoại lệ** | Không có dữ liệu trong khoảng thời gian đã chọn |
-| **Các yêu cầu đặc biệt** | Hỗ trợ hiển thị dưới dạng biểu đồ trực quan (cột, tròn, đường) |
+| **Mô tả** | Chức năng này cho phép người dùng xem thống kê tổng thu và tổng chi của từng ví trong khoảng thời gian xác định |
+| **Đầu vào** | Khoảng thời gian cần xem (từ ngày – đến ngày) |
+| **Đầu ra** | Biểu đồ trực quan và bảng thống kê theo từng ví |
+| **Điều kiện trước** | - Người dùng đã đăng nhập - Có dữ liệu giao dịch trong hệ thống |
+| **Điều kiện sau** | - Trường hợp thành công: Báo cáo hiển thị trên giao diện với biểu đồ và số liệu - Trường hợp không có dữ liệu: Hiển thị thông báo "Chưa có dữ liệu" |
+| **Ngoại lệ** | - Nếu không có dữ liệu trong khoảng thời gian đã chọn, hiển thị thông báo phù hợp |
+| **Các yêu cầu đặc biệt** | - Hỗ trợ biểu đồ trực quan: cột, tròn, đường - Giao diện responsive, hiển thị tốt trên mobile |
+
+*Bảng 2.23 Đặc tả chức năng Báo cáo chi tiêu theo ví*
 
 ### 2.4.6.2. Xem báo cáo thống kê chi tiêu theo danh mục
 
 | Tên chức năng | Báo cáo chi tiêu theo danh mục |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Thống kê và phân tích mức chi tiêu theo từng danh mục |
-| **Đầu vào** | Khoảng thời gian cần xem |
-| **Đầu ra** | Biểu đồ và bảng thống kê |
-| **Điều kiện trước** | Có dữ liệu giao dịch trong hệ thống |
-| **Điều kiện sau** | Báo cáo được hiển thị trên giao diện |
-| **Ngoại lệ** | Không có dữ liệu trong khoảng thời gian đã chọn |
-| **Các yêu cầu đặc biệt** | Tự động tính tỷ lệ phần trăm từng danh mục |
+| **Mô tả** | Chức năng này cho phép người dùng xem thống kê và phân tích mức chi tiêu theo từng danh mục |
+| **Đầu vào** | Khoảng thời gian cần xem (từ ngày – đến ngày) |
+| **Đầu ra** | Biểu đồ tròn/cột và bảng thống kê theo danh mục |
+| **Điều kiện trước** | - Người dùng đã đăng nhập - Có dữ liệu giao dịch |
+| **Điều kiện sau** | - Trường hợp thành công: Báo cáo hiển thị trên giao diện - Trường hợp không có dữ liệu: Hiển thị thông báo |
+| **Ngoại lệ** | - Nếu không có dữ liệu, hiển thị thông báo "Chưa có dữ liệu" |
+| **Các yêu cầu đặc biệt** | - Tự động tính tỷ lệ phần trăm từng danh mục so với tổng chi - Biểu đồ tròn mặc định để trực quan hóa tỷ lệ |
+
+*Bảng 2.24 Đặc tả chức năng Báo cáo chi tiêu theo danh mục*
 
 ### 2.4.6.3. Xem báo cáo thống kê chi tiêu theo thời gian
 
 | Tên chức năng | Báo cáo chi tiêu theo thời gian |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Thống kê xu hướng thu chi theo ngày, tuần, tháng hoặc năm |
-| **Đầu vào** | Khoảng thời gian cần xem |
-| **Đầu ra** | Biểu đồ và bảng thống kê |
-| **Điều kiện trước** | Có dữ liệu giao dịch trong hệ thống |
-| **Điều kiện sau** | Báo cáo được hiển thị trên giao diện |
-| **Ngoại lệ** | Không có dữ liệu trong khoảng thời gian đã chọn |
-| **Các yêu cầu đặc biệt** | Hỗ trợ biểu đồ đường thể hiện xu hướng tăng/giảm chi tiêu |
+| **Mô tả** | Chức năng này cho phép người dùng xem xu hướng thu chi theo ngày, tuần, tháng hoặc năm |
+| **Đầu vào** | Khoảng thời gian cần xem, đơn vị thời gian (ngày/tuần/tháng/năm) |
+| **Đầu ra** | Biểu đồ đường thể hiện xu hướng và bảng thống kê |
+| **Điều kiện trước** | - Người dùng đã đăng nhập - Có dữ liệu giao dịch |
+| **Điều kiện sau** | - Trường hợp thành công: Báo cáo hiển thị trên giao diện - Trường hợp không có dữ liệu: Hiển thị thông báo |
+| **Ngoại lệ** | - Nếu không có dữ liệu, hiển thị thông báo "Chưa có dữ liệu" |
+| **Các yêu cầu đặc biệt** | - Biểu đồ đường mặc định, thể hiện xu hướng tăng/giảm chi tiêu - Hỗ trợ so sánh kỳ trước vs kỳ hiện tại |
+
+*Bảng 2.25 Đặc tả chức năng Báo cáo chi tiêu theo thời gian*
 
 ---
 
@@ -843,39 +887,45 @@ flowchart TB
 | Tên chức năng | AI Chatbot trả lời câu hỏi |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Hỗ trợ người dùng tra cứu thông tin tài chính thông qua hội thoại |
-| **Đầu vào** | Nội dung câu hỏi |
-| **Đầu ra** | Câu trả lời bằng ngôn ngữ tự nhiên |
-| **Điều kiện trước** | Người dùng đăng nhập |
-| **Điều kiện sau** | Lưu lịch sử hội thoại |
-| **Ngoại lệ** | Không nhận diện được ý định câu hỏi |
-| **Các yêu cầu đặc biệt** | |
+| **Mô tả** | Chức năng này cho phép người dùng tra cứu thông tin tài chính cá nhân thông qua hội thoại bằng ngôn ngữ tự nhiên |
+| **Đầu vào** | Nội dung câu hỏi dưới dạng văn bản tự nhiên (tiếng Việt) |
+| **Đầu ra** | Câu trả lời bằng ngôn ngữ tự nhiên, có thể kèm số liệu minh họa |
+| **Điều kiện trước** | - Người dùng đã đăng nhập vào hệ thống |
+| **Điều kiện sau** | - Trường hợp thành công: Câu trả lời được hiển thị, lịch sử hội thoại được lưu - Trường hợp thất bại: Hiển thị thông báo "Tôi chưa hiểu câu hỏi, vui lòng thử lại" |
+| **Ngoại lệ** | - Nếu không nhận diện được ý định câu hỏi, trả lời thông báo gợi ý câu hỏi mẫu - Nếu hệ thống AI gặp lỗi kết nối, hiển thị thông báo lỗi |
+| **Các yêu cầu đặc biệt** | - Sử dụng NLP và RAG pipeline để xử lý câu hỏi - Lưu lịch sử hội thoại để cải thiện chất lượng phản hồi - Ghi log thời gian phản hồi để giám sát hiệu suất |
+
+*Bảng 2.26 Đặc tả chức năng AI Chatbot trả lời câu hỏi*
 
 ### 2.4.7.2. Phân tích xu hướng chi tiêu
 
 | Tên chức năng | Phân tích xu hướng chi tiêu |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Phân tích dữ liệu giao dịch để xác định xu hướng chi tiêu theo thời gian |
-| **Đầu vào** | Khoảng thời gian yêu cầu |
-| **Đầu ra** | Nhận xét phân tích và số liệu so sánh |
-| **Điều kiện trước** | Có dữ liệu giao dịch |
-| **Điều kiện sau** | Kết quả phân tích được hiển thị |
-| **Ngoại lệ** | Dữ liệu không đủ để phân tích |
-| **Các yêu cầu đặc biệt** | Sử dụng thuật toán thống kê hoặc AI để phân tích dữ liệu |
+| **Mô tả** | Chức năng này cho phép AI phân tích dữ liệu giao dịch để xác định xu hướng chi tiêu theo thời gian, so sánh các kỳ |
+| **Đầu vào** | Yêu cầu phân tích từ người dùng, khoảng thời gian (tùy chọn) |
+| **Đầu ra** | Nhận xét phân tích bằng ngôn ngữ tự nhiên kèm số liệu so sánh |
+| **Điều kiện trước** | - Người dùng đã đăng nhập - Có dữ liệu giao dịch đủ để phân tích (tối thiểu 2 kỳ) |
+| **Điều kiện sau** | - Trường hợp thành công: Kết quả phân tích được hiển thị, lịch sử lưu lại - Trường hợp thất bại: Thông báo dữ liệu chưa đủ |
+| **Ngoại lệ** | - Nếu dữ liệu không đủ để phân tích (ít hơn 2 kỳ), hiển thị thông báo yêu cầu bổ sung - Nếu AI gặp lỗi, hiển thị thông báo lỗi hệ thống |
+| **Các yêu cầu đặc biệt** | - Sử dụng thuật toán thống kê hoặc AI để phân tích - Kết quả phải có so sánh kỳ trước vs kỳ hiện tại - Ghi log thời gian phản hồi |
+
+*Bảng 2.27 Đặc tả chức năng Phân tích xu hướng chi tiêu*
 
 ### 2.4.7.3. Tư vấn tài chính dựa trên lịch sử
 
 | Tên chức năng | Tư vấn tài chính |
 | :---- | :---- |
 | **Tác nhân** | Người dùng |
-| **Mô tả** | Đưa ra khuyến nghị tài chính dựa trên dữ liệu thu chi, ngân sách và mục tiêu |
-| **Đầu vào** | Lịch sử giao dịch, ngân sách, thu nhập, mục tiêu |
-| **Đầu ra** | Nội dung tư vấn cá nhân hóa |
-| **Điều kiện trước** | Có dữ liệu giao dịch |
-| **Điều kiện sau** | Kết quả phân tích được hiển thị |
-| **Ngoại lệ** | Thiếu dữ liệu lịch sử |
-| **Các yêu cầu đặc biệt** | |
+| **Mô tả** | Chức năng này cho phép AI đưa ra khuyến nghị tài chính cá nhân hóa dựa trên dữ liệu thu chi, ngân sách và mục tiêu của người dùng |
+| **Đầu vào** | Yêu cầu tư vấn từ người dùng; hệ thống tự động truy xuất: lịch sử giao dịch, ngân sách, thu nhập, mục tiêu |
+| **Đầu ra** | Nội dung tư vấn cá nhân hóa bằng ngôn ngữ tự nhiên |
+| **Điều kiện trước** | - Người dùng đã đăng nhập - Có dữ liệu giao dịch trong hệ thống |
+| **Điều kiện sau** | - Trường hợp thành công: Nội dung tư vấn được hiển thị, lịch sử lưu lại - Trường hợp thất bại: Thông báo dữ liệu chưa đủ |
+| **Ngoại lệ** | - Nếu thiếu dữ liệu lịch sử, hiển thị thông báo gợi ý bổ sung dữ liệu - Nếu AI gặp lỗi, hiển thị thông báo lỗi hệ thống |
+| **Các yêu cầu đặc biệt** | - Tư vấn phải dựa trên dữ liệu thực tế của người dùng, không phải chung chung - Ghi log để giám sát chất lượng tư vấn |
+
+*Bảng 2.28 Đặc tả chức năng Tư vấn tài chính*
 
 ---
 
@@ -886,23 +936,27 @@ flowchart TB
 | Tên chức năng | Thống kê danh sách người dùng |
 | :---- | :---- |
 | **Tác nhân** | Quản trị viên |
-| **Mô tả** | Cho phép quản trị viên xem danh sách tài khoản người dùng và trạng thái hoạt động của từng tài khoản |
-| **Đầu vào** | Bộ lọc: trạng thái tài khoản (hoạt động/bị khóa), khoảng thời gian đăng ký, từ khóa tìm kiếm |
-| **Đầu ra** | Danh sách người dùng kèm thông tin: email, họ tên, ngày đăng ký, trạng thái, số lượng giao dịch |
-| **Điều kiện trước** | Quản trị viên đã đăng nhập với quyền admin |
-| **Điều kiện sau** | Danh sách người dùng được hiển thị trên giao diện quản trị |
-| **Ngoại lệ** | Không có người dùng phù hợp tiêu chí |
-| **Các yêu cầu đặc biệt** | Hỗ trợ phân trang; xuất danh sách ra Excel |
+| **Mô tả** | Chức năng này cho phép quản trị viên xem danh sách tài khoản người dùng và trạng thái hoạt động của từng tài khoản trong hệ thống |
+| **Đầu vào** | Bộ lọc: trạng thái tài khoản (hoạt động/bị khóa), khoảng thời gian đăng ký (từ ngày – đến ngày), từ khóa tìm kiếm (email, họ tên) |
+| **Đầu ra** | Danh sách người dùng kèm thông tin chi tiết: email, họ tên, ngày đăng ký, trạng thái, số lượng giao dịch, lần đăng nhập gần nhất |
+| **Điều kiện trước** | - Quản trị viên đã đăng nhập với quyền admin |
+| **Điều kiện sau** | - Trường hợp thành công: Danh sách người dùng hiển thị trên giao diện quản trị - Trường hợp không có dữ liệu: Hiển thị danh sách rỗng |
+| **Ngoại lệ** | - Nếu không có người dùng phù hợp tiêu chí, hiển thị danh sách rỗng - Nếu quản trị viên không có quyền admin, từ chối truy cập |
+| **Các yêu cầu đặc biệt** | - Hỗ trợ phân trang - Hỗ trợ xuất danh sách ra file Excel - Ghi log hoạt động quản trị |
+
+*Bảng 2.29 Đặc tả chức năng Thống kê danh sách người dùng*
 
 ### 2.4.8.2. Thống kê phản hồi AI Chatbot
 
 | Tên chức năng | Thống kê phản hồi AI Chatbot |
 | :---- | :---- |
 | **Tác nhân** | Quản trị viên |
-| **Mô tả** | Cho phép quản trị viên xem thống kê về hoạt động và chất lượng phản hồi của AI Chatbot |
-| **Đầu vào** | Bộ lọc: khoảng thời gian, loại câu hỏi (tra cứu/phân tích/tư vấn) |
-| **Đầu ra** | Báo cáo thống kê: tổng số câu hỏi, tỷ lệ phản hồi thành công, thời gian phản hồi trung bình, các câu hỏi phổ biến |
-| **Điều kiện trước** | Quản trị viên đã đăng nhập với quyền admin |
-| **Điều kiện sau** | Báo cáo thống kê AI được hiển thị trên giao diện quản trị |
-| **Ngoại lệ** | Không có dữ liệu chat trong khoảng thời gian đã chọn |
-| **Các yêu cầu đặc biệt** | Hiển thị biểu đồ trực quan; hỗ trợ giám sát hiệu suất AI |
+| **Mô tả** | Chức năng này cho phép quản trị viên xem thống kê về hoạt động và chất lượng phản hồi của AI Chatbot để giám sát và cải thiện hiệu suất |
+| **Đầu vào** | Bộ lọc: khoảng thời gian (từ ngày – đến ngày), loại câu hỏi (tra cứu/phân tích/tư vấn) |
+| **Đầu ra** | Báo cáo thống kê: tổng số câu hỏi, tỷ lệ phản hồi thành công, thời gian phản hồi trung bình, danh sách câu hỏi phổ biến, biểu đồ trực quan |
+| **Điều kiện trước** | - Quản trị viên đã đăng nhập với quyền admin |
+| **Điều kiện sau** | - Trường hợp thành công: Báo cáo thống kê AI hiển thị trên giao diện quản trị - Trường hợp không có dữ liệu: Hiển thị thông báo "Chưa có dữ liệu chat" |
+| **Ngoại lệ** | - Nếu không có dữ liệu chat trong khoảng thời gian, hiển thị thông báo phù hợp - Nếu quản trị viên không có quyền, từ chối truy cập |
+| **Các yêu cầu đặc biệt** | - Hiển thị biểu đồ trực quan (cột, đường) - Hỗ trợ giám sát hiệu suất AI theo thời gian thực - Ghi log hoạt động tra cứu thống kê |
+
+*Bảng 2.30 Đặc tả chức năng Thống kê phản hồi AI Chatbot*
