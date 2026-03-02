@@ -24,27 +24,16 @@ Sơ đồ luồng dữ liệu mức ngữ cảnh thể hiện tổng quát hệ 
 ```mermaid
 flowchart LR
     ND["Người dùng"]
-    P0("0. Hệ thống quản lý
-    tài chính cá nhân")
+    P0("0. Hệ thống quản lý<br/>tài chính cá nhân")
     QT["Quản trị viên"]
 
-    ND -->|"TT đăng ký, đăng nhập
-    Dữ liệu giao dịch thu chi
-    Cấu hình ví, ngân sách, mục tiêu
-    Câu hỏi AI Chatbot"| P0
+    ND -->|"TT đăng ký, đăng nhập<br/>Dữ liệu giao dịch thu chi<br/>Cấu hình ví, ngân sách, mục tiêu<br/>Câu hỏi AI Chatbot"| P0
 
-    P0 -->|"Kết quả xác thực
-    Báo cáo thu chi, số dư ví
-    Cảnh báo ngân sách, thông báo
-    Phản hồi AI Chatbot"| ND
+    P0 -->|"Kết quả xác thực<br/>Báo cáo thu chi, số dư ví<br/>Cảnh báo ngân sách, thông báo<br/>Phản hồi AI Chatbot"| ND
 
-    QT -->|"TT đăng nhập quản trị
-    Thao tác quản lý người dùng
-    Cấu hình hệ thống"| P0
+    QT -->|"TT đăng nhập quản trị<br/>Thao tác quản lý người dùng<br/>Cấu hình hệ thống"| P0
 
-    P0 -->|"DS và trạng thái người dùng
-    Thống kê tổng quan hệ thống
-    Thống kê phản hồi AI"| QT
+    P0 -->|"DS và trạng thái người dùng<br/>Thống kê tổng quan hệ thống<br/>Thống kê phản hồi AI"| QT
 ```
 
 *Hình 2.4 Sơ đồ DFD mức ngữ cảnh*
@@ -194,13 +183,10 @@ flowchart TB
     D1[("D1 Tài khoản")]
     D6[("D6 Mục tiêu")]
 
-    P11("1.1 Đăng ký
-    tài khoản")
+    P11("1.1 Đăng ký<br/>tài khoản")
     P12("1.2 Đăng nhập")
-    P13("1.3 Cập nhật
-    thông tin")
-    P14("1.4 Thiết lập
-    mục tiêu")
+    P13("1.3 Cập nhật<br/>thông tin")
+    P14("1.4 Thiết lập<br/>mục tiêu")
 
     ND -->|"Email, mật khẩu, họ tên"| P11
     P11 -->|"Mã OTP"| ND
@@ -237,10 +223,8 @@ flowchart TB
 
     P21("2.1 Tạo ví")
     P22("2.2 Sửa ví")
-    P23("2.3 Cấu hình
-    ngân sách theo ví")
-    P24("2.4 Cấu hình
-    mục tiêu theo ví")
+    P23("2.3 Cấu hình<br/>ngân sách theo ví")
+    P24("2.4 Cấu hình<br/>mục tiêu theo ví")
 
     ND -->|"Tên ví, số dư ban đầu"| P21
     P21 -->|"Lưu TT ví"| D2
@@ -356,12 +340,9 @@ flowchart TB
     D5[("D5 Ngân sách")]
     D7[("D7 Thông báo")]
 
-    P41("4.1 Cấu hình ngưỡng
-    CB theo ví")
-    P42("4.2 Cấu hình ngưỡng
-    CB theo danh mục")
-    P43("4.3 Xem DS
-    cảnh báo chi tiêu")
+    P41("4.1 Cấu hình ngưỡng<br/>CB theo ví")
+    P42("4.2 Cấu hình ngưỡng<br/>CB theo danh mục")
+    P43("4.3 Xem DS<br/>cảnh báo chi tiêu")
 
     ND -->|"Ví, ngưỡng cảnh báo"| P41
     P41 -->|"Lưu cấu hình"| D5
@@ -438,12 +419,9 @@ flowchart TB
     D3[("D3 Giao dịch")]
     D4[("D4 Danh mục")]
 
-    P61("6.1 Báo cáo thống kê
-    chi tiêu theo ví")
-    P62("6.2 Báo cáo thống kê
-    chi tiêu theo danh mục")
-    P63("6.3 Báo cáo thống kê
-    chi tiêu theo thời gian")
+    P61("6.1 Báo cáo thống kê<br/>chi tiêu theo ví")
+    P62("6.2 Báo cáo thống kê<br/>chi tiêu theo danh mục")
+    P63("6.3 Báo cáo thống kê<br/>chi tiêu theo thời gian")
 
     ND -->|"Khoảng thời gian"| P61
     P61 -->|"Đọc giao dịch"| D3
@@ -476,12 +454,9 @@ flowchart TB
     D6[("D6 Mục tiêu")]
     D9[("D9 Lịch sử chat")]
 
-    P71("7.1 Trả lời
-    câu hỏi NLP")
-    P72("7.2 Phân tích
-    xu hướng chi tiêu")
-    P73("7.3 Tư vấn
-    tài chính")
+    P71("7.1 Trả lời<br/>câu hỏi NLP")
+    P72("7.2 Phân tích<br/>xu hướng chi tiêu")
+    P73("7.3 Tư vấn<br/>tài chính")
 
     ND -->|"Câu hỏi"| P71
     P71 -->|"Truy vấn dữ liệu"| D3
@@ -516,10 +491,8 @@ flowchart TB
     D1[("D1 Tài khoản")]
     D9[("D9 Lịch sử chat")]
 
-    P81("8.1 Thống kê
-    danh sách người dùng")
-    P82("8.2 Thống kê
-    phản hồi AI Chatbot")
+    P81("8.1 Thống kê<br/>danh sách người dùng")
+    P82("8.2 Thống kê<br/>phản hồi AI Chatbot")
 
     QT -->|"Tiêu chí thống kê"| P81
     P81 -->|"Đọc TT người dùng"| D1
